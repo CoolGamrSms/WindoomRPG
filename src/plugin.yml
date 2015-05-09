@@ -7,17 +7,3 @@ website: http://windoom.com/index.php
 description: RPG core for Windoom SMP
 #include Citizens later
 depend: [WorldGuard, SimpleClans, MCCore, SkillAPI, LWC, CreeperHeal, Vault]
-
-wrpg.warrior:
-  description: Access to all warrior abilities
-  children:
-    wrpg.wDiamondArmor: true
-wrpg.mage:
-  description: Allows access to all mage abilities
-  children: 
-    wrpg.mPotionMaking: true
-    wrpg.mItemEnchants: true
-wrpg.rouge:
-  description: Access to all rouge abilities and passives
-  children:
-    wrpg.rCraftChainmail: true
