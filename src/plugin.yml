@@ -5,4 +5,5 @@ main: com.shaneschulte.plugins.windoomrpg.WindoomRPG
 authors: [Hikeru]
 website: http://windoom.com/index.php
 description: RPG core for Windoom SMP
-depend: [Citizens, WorldGuard, SimpleClans, MCCore, SkillAPI, LWC, CreeperHeal, Vault]
+#include Citizens later
+depend: [WorldGuard, SimpleClans, MCCore, SkillAPI, LWC, CreeperHeal, Vault]
