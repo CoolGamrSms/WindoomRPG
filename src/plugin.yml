@@ -1,0 +1,8 @@
+name: WindoomRPG
+version: 0.1a
+#prefix: wRPG
+main: com.shaneschulte.plugins.windoomrpg.WindoomRPG
+authors: [Hikeru]
+website: http://windoom.com/index.php
+description: RPG core for Windoom SMP
+depend: [citizens, worldguard, simpleclans, mccore, skillapi, lwc, creeperheal, vault]
