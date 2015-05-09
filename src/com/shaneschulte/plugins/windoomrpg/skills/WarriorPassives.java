@@ -5,10 +5,9 @@
  */
 package com.shaneschulte.plugins.windoomrpg.skills;
 
-import com.shaneschulte.plugins.windoomrpg.Permissions;
+import com.shaneschulte.plugins.windoomrpg.RPGperms;
 import com.shaneschulte.plugins.windoomrpg.PlayerChecks;
 import com.shaneschulte.plugins.windoomrpg.WDmsg;
-import com.shaneschulte.plugins.windoomrpg.WindoomRPG;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -40,8 +39,8 @@ public class WarriorPassives extends BukkitRunnable implements Listener {
     @Override
     public void run() {
         for (Player p : plugin.getServer().getOnlinePlayers()) {
-            if (!p.hasPermission(Permissions.EQUIP_DIAMOND_ARMOR.getPermission()) && PlayerChecks.hasDArmor(p)) {
-                WDmsg.getInstance().bad(p, Permissions.EQUIP_DIAMOND_ARMOR.getWarning());
+            if (!p.hasPermission(RPGperms.EQUIP_DIAMOND_ARMOR.getPermission()) && PlayerChecks.hasDArmor(p)) {
+                WDmsg.getInstance().bad(p, RPGperms.EQUIP_DIAMOND_ARMOR.getWarning());
                 PlayerChecks.removeDArmor(p);
             }
         }
