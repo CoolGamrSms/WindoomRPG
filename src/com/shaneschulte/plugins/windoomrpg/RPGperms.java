@@ -13,17 +13,19 @@ import net.md_5.bungee.api.ChatColor;
  * 
  */
 
-public enum Permissions {
+public enum RPGperms {
 
     //add permissions here
-    EQUIP_DIAMOND_ARMOR(WindoomRPG.p + "equipdiamondarmors", "This armor feels too heavy. &eClass: &cWarrior" /*"You must be a Warrior to equip diamond armor"*/), 
-    ;
+    EQUIP_DIAMOND_ARMOR(WindoomRPG.p + "wDiamondArmor", "This armor is too heavy. &eClass: &cWarrior" /*"You must be a Warrior to equip diamond armor"*/), 
+    BREW_POTIONS(WindoomRPG.p + "mPotionMaking", "The magic on this device confuses me. &eClass: &cMage"),
+    ENCHANT_ITEMS(WindoomRPG.p + "mItemEnchants", "This book is far to complex for me. &eClass: &cMage"),
+    CRAFT_CHAINMAIL(WindoomRPG.p + "rCraftChainmail", "I am not skilled enough to do this. &eClass: &cRouge");
     
     //get permissions and warnings v  v
     private final String permission;
     private final String warning;
 
-    private Permissions(String perm, String warning) {
+    private RPGperms(String perm, String warning) {
         this.permission = perm;
         this.warning = ChatColor.translateAlternateColorCodes('&', warning);
     }
