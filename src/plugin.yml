@@ -6,4 +6,3 @@ authors: [Hikeru]
 website: http://windoom.com/index.php
 description: RPG core for Windoom SMP
 depend: [Citizens, WorldGuard, SimpleClans, MCCore, SkillAPI, LWC, CreeperHeal, Vault]
-
