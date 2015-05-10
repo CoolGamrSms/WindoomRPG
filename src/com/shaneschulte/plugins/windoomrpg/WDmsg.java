@@ -17,15 +17,15 @@ public class WDmsg {
 	private WDmsg() { }
         
         //message colors
-	public static ChatColor info = ChatColor.GRAY, bad = ChatColor.RED, nice = ChatColor.AQUA;
-        public static String prefix = ChatColor.translateAlternateColorCodes('&', "&e<&6wRPG&e> " + info);
+	public final static ChatColor info = ChatColor.GRAY, bad = ChatColor.RED, nice = ChatColor.AQUA;
+        public final static String prefix = ChatColor.translateAlternateColorCodes('&', "&e<&6wRPG&e> " + info);
 	
 	private static WDmsg instance = new WDmsg();
 	public static WDmsg getInstance() {
 		return instance;
 	}
 	
-	public String getprefix() {
+	public String getPrefix() {
 		return prefix;
 	}
 	

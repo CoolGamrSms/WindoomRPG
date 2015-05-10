@@ -76,12 +76,7 @@ public class PlayerChecks {
     }
  
     public static boolean hasFullInventory(Player player) {
-        boolean isFull = false;
-        if (player.getInventory().firstEmpty() == -1) isFull = true;
-        
-        return isFull;
+        return (player.getInventory().firstEmpty() == -1);
     }
-
-
-
+    
 }

@@ -5,7 +5,8 @@
  */
 package com.shaneschulte.plugins.windoomrpg;
 
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
+
 
 /**
  *
