@@ -1,0 +1,4 @@
+recruit: "Hello there! Would you like to join the Kingdom of %s?"
+recruited: "Welcome to the Kingdom of %s!"
+recruited-positive: "You made the right choice, soldier!"
+recruited-negative: "Get away from me, scum."

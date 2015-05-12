@@ -2,11 +2,11 @@ name: WindoomRPG
 version: 0.1a
 #prefix: wRPG
 main: com.shaneschulte.plugins.windoomrpg.WindoomRPG
-authors: [Hikeru]
+authors: [Hikeru, CoolGamrSms]
 website: http://windoom.com/index.php
 description: RPG core for Windoom SMP
 #include Citizens later
-depend: [WorldGuard, SimpleClans, MCCore, SkillAPI, LWC, CreeperHeal, Vault]
+depend: [WorldGuard, SimpleClans, MCCore, SkillAPI, LWC, CreeperHeal, Vault, Citizens]
 
 wrpg.warrior:
   description: Access to all warrior abilities

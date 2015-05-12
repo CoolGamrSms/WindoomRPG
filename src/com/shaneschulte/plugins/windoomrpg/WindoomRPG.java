@@ -4,12 +4,20 @@
  */
 package com.shaneschulte.plugins.windoomrpg;
 
+import com.rit.sucy.commands.CommandManager;
+import com.rit.sucy.commands.ConfigurableCommand;
+import com.rit.sucy.commands.SenderType;
+import com.rit.sucy.config.Config;
+import com.shaneschulte.plugins.commands.RecruiterCommand;
 import com.shaneschulte.plugins.windoomrpg.skills.MagePassives;
 import com.shaneschulte.plugins.windoomrpg.skills.RougePassives;
 import com.shaneschulte.plugins.windoomrpg.skills.WarriorPassives;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
+import com.shaneschulte.plugins.windoomrpg.traits.RecruiterTrait;
+import java.util.logging.Level;
+import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
+import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -22,10 +30,16 @@ public class WindoomRPG extends JavaPlugin {
     
     //permissions prefix
     static String p = "wrpg.";
+    private SimpleClans sc;
+    Config lang;
     
     @Override
     public void onEnable() {
-        
+        //Print enable message
+        PluginDescriptionFile pdfFile = this.getDescription();
+        this.getLogger().log(Level.INFO, "{0} version {1} by {2} is enabled!", 
+                new Object[]{pdfFile.getName(), pdfFile.getVersion(), pdfFile.getAuthors().get(0)});
+
         //2 seconds
         BukkitTask diamondArmorCheck = new WarriorPassives(this).runTaskTimer(this, 20, 40);
         
@@ -34,18 +48,70 @@ public class WindoomRPG extends JavaPlugin {
             pm.registerEvents(new WarriorPassives(this), this);
             pm.registerEvents(new MagePassives(), this);
             pm.registerEvents(new RougePassives(), this);
+            
+        //check if Citizens is present and enabled.
+        if(getServer().getPluginManager().getPlugin("Citizens") == null || getServer().getPluginManager().getPlugin("Citizens").isEnabled() == false) {
+            getLogger().log(Level.SEVERE, "Citizens 2.0 not found or not enabled");
+            getServer().getPluginManager().disablePlugin(this);	
+            return;
+        }
 
+        //Register your trait with Citizens.
+        try {
+            net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(RecruiterTrait.class).withName("recruiter"));	
+        }
+        catch(Exception e) {
             
-            
-        //recipies
-        ShapedRecipe chainHelm = new ShapedRecipe(new ItemStack(Material.CHAINMAIL_HELMET)).shape("ooo", "oxo", "xxx").
-        setIngredient('o', Material.IRON_INGOT).setIngredient('x', Material.AIR);
-        getServer().addRecipe(chainHelm);
+        }
+        //Attempt to hook into SimpleClans
+        if (!hookSimpleClans()) {
+            this.getLogger().log(Level.SEVERE, "Failed to hook into SimpleClans! Disabling...");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        
+        //Save default language config
+        lang = new Config(this, "lang");
+        lang.saveDefaultConfig();
+        
+        //Register commands
+        ConfigurableCommand myRoot = new ConfigurableCommand(this, "recruiter", SenderType.PLAYER_ONLY);
+        ConfigurableCommand myCommand = new ConfigurableCommand(
+            this, 
+            "set", 
+            SenderType.PLAYER_ONLY, 
+            new RecruiterCommand(),
+            "Sets the recruiters clan", // A description for the command usage
+            "<clan>", // Arguments for the command usage
+            "citizens.admin" // The required permission for the command
+        );
+        myRoot.addSubCommand(myCommand);
+        CommandManager.registerCommand(myRoot);
 
         
     }
+    
+    public String getString(String name) {
+        return (String)lang.getConfig().get(name);
+    }
+    
+    private boolean hookSimpleClans() {
+        Plugin plug = getServer().getPluginManager().getPlugin("SimpleClans");
+        if (plug != null) {
+            sc = ((SimpleClans) plug);
+            return true;
+        }
+        return false;
+    }
+    public ClanManager getClanManager() {
+        return this.sc.getClanManager();
+    }
     @Override
     public void onDisable() {
-        
+        //Print disable message
+        PluginDescriptionFile pdfFile = this.getDescription();
+        this.getLogger().log(Level.INFO, "{0} version {1} by {2} is disabled.", 
+                new Object[]{pdfFile.getName(), pdfFile.getVersion(), pdfFile.getAuthors().get(0)});
+
     }
 }

@@ -40,7 +40,7 @@ public class WarriorPassives extends BukkitRunnable implements Listener {
     public void run() {
         for (Player p : plugin.getServer().getOnlinePlayers()) {
             if (!p.hasPermission(RPGperms.EQUIP_DIAMOND_ARMOR.getPermission()) && PlayerChecks.hasDArmor(p)) {
-                WDmsg.getInstance().bad(p, RPGperms.EQUIP_DIAMOND_ARMOR.getWarning());
+                WDmsg.bad(p, RPGperms.EQUIP_DIAMOND_ARMOR.getWarning());
                 PlayerChecks.removeDArmor(p);
             }
         }

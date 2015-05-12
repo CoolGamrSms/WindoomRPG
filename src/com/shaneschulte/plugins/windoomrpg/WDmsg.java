@@ -21,33 +21,30 @@ public class WDmsg {
         public final static String prefix = ChatColor.translateAlternateColorCodes('&', "&e<&6wRPG&e> " + info);
 	
 	private static WDmsg instance = new WDmsg();
-	public static WDmsg getInstance() {
-		return instance;
-	}
 	
-	public String getPrefix() {
+	public static String getPrefix() {
 		return prefix;
 	}
 	
-	public void info(CommandSender s, String msg) {
+	public static void info(CommandSender s, String msg) {
 		msgColor(s, info, msg);
 	}
 	
-	public void bad(CommandSender s, String msg) {
+	public static void bad(CommandSender s, String msg) {
 		msgColor(s, bad, msg);
 	}
 	
-	public void nice(CommandSender s, String msg) {
+	public static void nice(CommandSender s, String msg) {
 		msgColor(s, nice, msg);
 	}
 	
 	
-	public void message(CommandSender s, String msg) {
+	public static void message(CommandSender s, String msg) {
 		s.sendMessage(ChatColor.GOLD + ChatColor.translateAlternateColorCodes('%', msg));
 	}
 	
 	
-	private void msgColor(CommandSender s, ChatColor color, String msg) {
+	private static void msgColor(CommandSender s, ChatColor color, String msg) {
 		s.sendMessage(prefix + color + ChatColor.translateAlternateColorCodes('%', msg));
 	}
 	

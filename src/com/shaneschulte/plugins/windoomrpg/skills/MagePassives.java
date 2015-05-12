@@ -23,7 +23,7 @@ public class MagePassives implements Listener {
     public void onInventoryOpenEvent(InventoryOpenEvent e){
         if (e.getInventory().getHolder() instanceof BrewingStand){
             if (!e.getPlayer().hasPermission(RPGperms.BREW_POTIONS.getPermission())) {
-                WDmsg.getInstance().bad(e.getPlayer(), RPGperms.BREW_POTIONS.getWarning());
+                WDmsg.bad(e.getPlayer(), RPGperms.BREW_POTIONS.getWarning());
                 e.setCancelled(true);
             }
             // rawr
@@ -34,7 +34,7 @@ public class MagePassives implements Listener {
     public void onPlayerInteractBlock (PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.ENCHANTMENT_TABLE) {
             if (!event.getPlayer().hasPermission(RPGperms.ENCHANT_ITEMS.getPermission())) {
-                WDmsg.getInstance().bad(event.getPlayer(), RPGperms.ENCHANT_ITEMS.getWarning());
+                WDmsg.bad(event.getPlayer(), RPGperms.ENCHANT_ITEMS.getWarning());
                 event.setCancelled(true);
             }
         }
