@@ -6,6 +6,10 @@ package com.shaneschulte.plugins.windoomrpg.traits;
 
 import com.shaneschulte.plugins.windoomrpg.WDmsg;
 import com.shaneschulte.plugins.windoomrpg.WindoomRPG;
+import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.classes.RPGClass;
+import com.sucy.skill.api.player.PlayerData;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;
 import net.sacredlabyrinth.phaed.simpleclans.Clan;
@@ -32,34 +36,62 @@ public class RecruiterTrait extends Trait {
     WindoomRPG plugin = null;
 
     @Persist String tag = null;
+    @Persist String rival = null;
+    @Persist boolean clan = false;
+    @Persist String skill = null;
 
 
     // An example event handler. All traits will be registered automatically as Bukkit Listeners.
     @EventHandler
-    public void click(net.citizensnpcs.api.event.NPCRightClickEvent event) {
-        if(tag == null) return;
+    public void click(NPCRightClickEvent event) {
+        if((tag == null || rival == null) && skill == null) return;
         if(event.getNPC() == this.getNPC()) {
-            Clan clan = plugin.getClanManager().getClan(tag);
-            if(clan == null) return;
             Player p = event.getClicker();
-            ClanPlayer cp = plugin.getClanManager().getClanPlayer(p);
-            if(cp == null || cp.getClan() == null) {
-                //Attempt to recruit
-                if(p.isSneaking()) {
-                    WDmsg.nice((CommandSender)p, String.format(plugin.getString("recruited"), clan.getName()));
-                    if(cp != null) plugin.getClanManager().deleteClanPlayer(cp);
-                    plugin.getClanManager().getCreateClanPlayer(p.getUniqueId()).setClan(clan);
+            if(clan) {
+                ClanPlayer cp  = plugin.getClanManager().getClanPlayer(p);
+                Clan myClan    = plugin.getClanManager().getClan(tag);
+                Clan otherClan = plugin.getClanManager().getClan(rival);
+                if(cp == null || cp.getClan() == null) {
+                    //Attempt to recruit
+                    if(myClan == null || otherClan == null) return;
+                    if(p.isSneaking()) {
+                        if(myClan.getSize()-otherClan.getSize() >= 5) {
+                            WDmsg.bad((CommandSender)p, plugin.getString("recruit-full"));
+                            return;
+                        }
+                        WDmsg.nice((CommandSender)p, String.format(plugin.getString("recruited"), myClan.getName()));
+                        if(cp != null) plugin.getClanManager().deleteClanPlayer(cp);
+                        plugin.getClanManager().getCreateClanPlayer(p.getUniqueId()).setClan(myClan);
+                    }
+                    else {
+                        WDmsg.info((CommandSender)p, String.format(plugin.getString("recruit"), myClan.getName()));
+                    }
                 }
                 else {
-                    WDmsg.info((CommandSender)p, String.format(plugin.getString("recruit"), clan.getName()));
+                    if(cp.getClan().equals(myClan)) {
+                        WDmsg.nice((CommandSender)p, plugin.getString("recruited-positive"));
+                    }
+                    else {
+                        WDmsg.bad((CommandSender)p, plugin.getString("recruited-negative"));
+                    }
                 }
             }
             else {
-                if(cp.getClan().equals(plugin.getClanManager().getClan(tag))) {
-                    WDmsg.nice((CommandSender)p, plugin.getString("recruited-positive"));
+                //This recruiter is for a skill, not a clan
+                PlayerData pd = SkillAPI.getPlayerData(p);
+                RPGClass c = SkillAPI.getClass(skill);
+                if(c == null) return;
+                if(pd.canProfess(c)) {
+                    if(p.isSneaking()) {
+                        pd.setClass(c);
+                        WDmsg.nice((CommandSender)p, String.format(plugin.getString("class-joined"), c.getName()));
+                    }
+                    else {
+                        WDmsg.info((CommandSender)p, String.format(plugin.getString("class"), c.getName()));
+                    }
                 }
                 else {
-                    WDmsg.bad((CommandSender)p, plugin.getString("recruited-negative"));
+                    WDmsg.info((CommandSender)p, plugin.getString("no-comment"));
                 }
             }
         }
@@ -95,8 +127,15 @@ public class RecruiterTrait extends Trait {
     public void onRemove() {
     }
 
-    public void setClan(Clan clan) {
-        this.tag = clan.getTag();
+    public void setClan(Clan clan1, Clan clan2) {
+        this.tag = clan1.getTag();
+        this.rival = clan2.getTag();
+        clan = true;
+    }
+
+    public void setClass(RPGClass c) {
+        this.tag = c.getName();
+        clan = false;
     }
  
 }

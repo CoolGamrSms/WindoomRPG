@@ -5,21 +5,16 @@
  */
 package com.shaneschulte.plugins.windoomrpg.skills;
 
-import com.shaneschulte.plugins.windoomrpg.RPGperms;
-import com.shaneschulte.plugins.windoomrpg.PlayerChecks;
-import com.shaneschulte.plugins.windoomrpg.WDmsg;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  *
  * @author Hikeru
  */
-public class WarriorPassives extends BukkitRunnable implements Listener {
+public class WarriorPassives implements Listener {
     //Extends BukkitRunnable to create a run method
  
     private final JavaPlugin plugin;
@@ -27,24 +22,6 @@ public class WarriorPassives extends BukkitRunnable implements Listener {
 
     public WarriorPassives(JavaPlugin plugin) {
     this.plugin = plugin;
-    }
-    //This is called from your main class and sets your plugin variable
-    
-    @EventHandler
-    public void onEquipArmor(InventoryClickEvent ev) {
-        
-    }
-
-    //run from main class like every 2 seconds
-    @Override
-    public void run() {
-        for (Player p : plugin.getServer().getOnlinePlayers()) {
-            if (!p.hasPermission(RPGperms.EQUIP_DIAMOND_ARMOR.getPermission()) && PlayerChecks.hasDArmor(p)) {
-                WDmsg.bad(p, RPGperms.EQUIP_DIAMOND_ARMOR.getWarning());
-                PlayerChecks.removeDArmor(p);
-            }
-        }
-
     }
     
 }

@@ -1,4 +1,8 @@
 recruit: "Hello there! Would you like to join the Kingdom of %s?"
 recruited: "Welcome to the Kingdom of %s!"
+recruit-full: "Our kingdom is a bit full right now... try again later!"
 recruited-positive: "You made the right choice, soldier!"
 recruited-negative: "Get away from me, scum."
+no-comment: "I have nothing to say to you."
+class: "Would you like to train to become a %s?"
+class-joined: "Congratulations, new %s! Good luck in your travels!"

@@ -8,27 +8,12 @@ package com.shaneschulte.plugins.windoomrpg.skills;
 import com.shaneschulte.plugins.windoomrpg.RPGperms;
 import com.shaneschulte.plugins.windoomrpg.WDmsg;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BrewingStand;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class MagePassives implements Listener {
-    
-    
-    @EventHandler
-    public void onInventoryOpenEvent(InventoryOpenEvent e){
-        if (e.getInventory().getHolder() instanceof BrewingStand){
-            if (!e.getPlayer().hasPermission(RPGperms.BREW_POTIONS.getPermission())) {
-                WDmsg.bad(e.getPlayer(), RPGperms.BREW_POTIONS.getWarning());
-                e.setCancelled(true);
-            }
-            // rawr
-        }
-    }
     
     @EventHandler
     public void onPlayerInteractBlock (PlayerInteractEvent event) {

@@ -9,6 +9,7 @@ import com.rit.sucy.commands.ConfigurableCommand;
 import com.rit.sucy.commands.SenderType;
 import com.rit.sucy.config.Config;
 import com.shaneschulte.plugins.commands.RecruiterCommand;
+import com.shaneschulte.plugins.windoomrpg.skills.ArmorPassives;
 import com.shaneschulte.plugins.windoomrpg.skills.MagePassives;
 import com.shaneschulte.plugins.windoomrpg.skills.RougePassives;
 import com.shaneschulte.plugins.windoomrpg.skills.WarriorPassives;
@@ -20,7 +21,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -39,13 +39,11 @@ public class WindoomRPG extends JavaPlugin {
         PluginDescriptionFile pdfFile = this.getDescription();
         this.getLogger().log(Level.INFO, "{0} version {1} by {2} is enabled!", 
                 new Object[]{pdfFile.getName(), pdfFile.getVersion(), pdfFile.getAuthors().get(0)});
-
-        //2 seconds
-        BukkitTask diamondArmorCheck = new WarriorPassives(this).runTaskTimer(this, 20, 40);
         
         //register events
         PluginManager pm = getServer().getPluginManager();
             pm.registerEvents(new WarriorPassives(this), this);
+            pm.registerEvents(new ArmorPassives(this), this);
             pm.registerEvents(new MagePassives(), this);
             pm.registerEvents(new RougePassives(), this);
             
@@ -82,7 +80,7 @@ public class WindoomRPG extends JavaPlugin {
             SenderType.PLAYER_ONLY, 
             new RecruiterCommand(),
             "Sets the recruiters clan", // A description for the command usage
-            "<clan>", // Arguments for the command usage
+            "<clan/class>", // Arguments for the command usage
             "citizens.admin" // The required permission for the command
         );
         myRoot.addSubCommand(myCommand);

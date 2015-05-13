@@ -9,6 +9,8 @@ import com.rit.sucy.commands.IFunction;
 import com.shaneschulte.plugins.windoomrpg.WDmsg;
 import com.shaneschulte.plugins.windoomrpg.WindoomRPG;
 import com.shaneschulte.plugins.windoomrpg.traits.RecruiterTrait;
+import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.classes.RPGClass;
 import net.citizensnpcs.Citizens;
 import net.citizensnpcs.api.npc.NPC;
 import net.sacredlabyrinth.phaed.simpleclans.Clan;
@@ -31,20 +33,35 @@ public class RecruiterCommand implements IFunction {
             return;
         }
         if (!ThisNPC.hasTrait(RecruiterTrait.class)) {
-            WDmsg.bad(sender, "That command must be performed on a Sentry!");
+            WDmsg.bad(sender, "That command must be performed on a Recruiter!");
             return;
         }
-        if(args.length == 1) {
+        if(args.length == 2) {
             String tag = args[0];
+            String rival = args[1];
             WindoomRPG wrpg = (WindoomRPG)plugin;
-            Clan clan = wrpg.getClanManager().getClan(tag);
-            if(clan == null) {
+            Clan clan1 = wrpg.getClanManager().getClan(tag);
+            Clan clan2 = wrpg.getClanManager().getClan(rival);
+            if(clan1 == null || clan2 == null) {
                 WDmsg.bad(sender, "That clan doesn't exist.");
                 return;
             }
             RecruiterTrait rt = ThisNPC.getTrait(RecruiterTrait.class);
-            rt.setClan(clan);
+            rt.setClan(clan1, clan2);
             WDmsg.nice(sender, "Clan set successfully!");
+            return;
+        }
+        else if(args.length == 1) {
+            String tag = args[0];
+            //Test if it's a skill instead
+            RPGClass c = SkillAPI.getClass(tag);
+            if(c != null) {
+                RecruiterTrait rt = ThisNPC.getTrait(RecruiterTrait.class);
+                rt.setClass(c);
+                WDmsg.nice(sender, "Class set successfully!");
+                return;
+            }
+            WDmsg.bad(sender, "That class doesn't exist.");
             return;
         }
 

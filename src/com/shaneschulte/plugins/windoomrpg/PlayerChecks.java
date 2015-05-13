@@ -16,63 +16,53 @@ import org.bukkit.inventory.PlayerInventory;
  */
 public class PlayerChecks {   
     
-    public static boolean hasArmorType(ItemStack item, Material type) {
-        return (item == null ? false : item.getType() == type);
-    }
-
-    public static boolean hasDArmor(Player player) {
-        PlayerInventory inventory = player.getInventory();
-
-        if(hasArmorType(inventory.getHelmet(), Material.DIAMOND_HELMET)
-        || hasArmorType(inventory.getChestplate(), Material.DIAMOND_CHESTPLATE)
-        || hasArmorType(inventory.getLeggings(), Material.DIAMOND_LEGGINGS)
-        || hasArmorType(inventory.getBoots(), Material.DIAMOND_BOOTS))
-        {
-            return true;
-        }    
-        
-        return false;
-    
+    public static String getArmorType(ItemStack item) {
+        return (item == null ? "" : item.getType().toString().split("_")[0]);
     }
     
-    public static void removeDArmor(Player player) {
+    public static boolean removeArmorType(Player player, String type) {
         PlayerInventory inventory = player.getInventory();
-    
+        boolean result = false;
         //Helmets
-        if (hasArmorType(inventory.getHelmet(), Material.DIAMOND_HELMET)) {
-            ItemStack helm = player.getInventory().getHelmet();
+        if (getArmorType(inventory.getHelmet()).equalsIgnoreCase(type)) {
+            ItemStack item = player.getInventory().getHelmet();
             player.getInventory().setHelmet(new ItemStack(Material.AIR));
             if (!hasFullInventory(player))
-                player.getInventory().addItem(helm);
-            else player.getWorld().dropItem(player.getLocation(), helm);
+                player.getInventory().addItem(item);
+            else player.getWorld().dropItem(player.getLocation(), item);
+            result = true;
         }
         
         //Chests
-        if (hasArmorType(inventory.getChestplate(), Material.DIAMOND_CHESTPLATE)) {
-            ItemStack helm = player.getInventory().getChestplate();
+        if (getArmorType(inventory.getChestplate()).equalsIgnoreCase(type)) {
+            ItemStack item = player.getInventory().getChestplate();
             player.getInventory().setChestplate(new ItemStack(Material.AIR));
             if (!hasFullInventory(player))
-                player.getInventory().addItem(helm);
-            else player.getWorld().dropItem(player.getLocation(), helm);
+                player.getInventory().addItem(item);
+            else player.getWorld().dropItem(player.getLocation(), item);
+            result = true;
         }
         
         //Leggings
-        if (hasArmorType(inventory.getLeggings(), Material.DIAMOND_LEGGINGS)) {
-            ItemStack helm = player.getInventory().getLeggings();
+        if (getArmorType(inventory.getLeggings()).equalsIgnoreCase(type)) {
+            ItemStack item = player.getInventory().getLeggings();
             player.getInventory().setLeggings(new ItemStack(Material.AIR));
             if (!hasFullInventory(player))
-                player.getInventory().addItem(helm);
-            else player.getWorld().dropItem(player.getLocation(), helm);
+                player.getInventory().addItem(item);
+            else player.getWorld().dropItem(player.getLocation(), item);
+            result = true;
         }
         
         //Shoues
-       if (hasArmorType(inventory.getBoots(), Material.DIAMOND_BOOTS)) {
-            ItemStack helm = player.getInventory().getBoots();
+        if (getArmorType(inventory.getBoots()).equalsIgnoreCase(type)) {
+            ItemStack item = player.getInventory().getBoots();
             player.getInventory().setBoots(new ItemStack(Material.AIR));
             if (!hasFullInventory(player))
-                player.getInventory().addItem(helm);
-            else player.getWorld().dropItem(player.getLocation(), helm);
+                player.getInventory().addItem(item);
+            else player.getWorld().dropItem(player.getLocation(), item);
+            result = true;
         }       
+        return result;
     }
  
     public static boolean hasFullInventory(Player player) {

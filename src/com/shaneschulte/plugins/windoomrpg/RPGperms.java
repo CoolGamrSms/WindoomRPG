@@ -17,10 +17,10 @@ import org.bukkit.ChatColor;
 public enum RPGperms {
 
     //add permissions here
-    EQUIP_DIAMOND_ARMOR(WindoomRPG.p + "wDiamondArmor", "This armor is too heavy. &eClass: &cWarrior" /*"You must be a Warrior to equip diamond armor"*/), 
-    BREW_POTIONS(WindoomRPG.p + "mPotionMaking", "The magic on this device confuses me. &eClass: &cMage"),
-    ENCHANT_ITEMS(WindoomRPG.p + "mItemEnchants", "This book is far to complex for me. &eClass: &cMage"),
-    CRAFT_CHAINMAIL(WindoomRPG.p + "rCraftChainmail", "I am not skilled enough to do this. &eClass: &cRouge");
+    USE_DIAMOND_ARMOR(WindoomRPG.p + "DiamondArmor", "This armor is too heavy." /*"You must be a Warrior to equip diamond armor"*/), 
+    ENCHANT_ITEMS(WindoomRPG.p + "ItemEnchants", "This book is far to complex for me."),
+    USE_IRON_ARMOR(WindoomRPG.p + "IronArmor", "This armor is too heavy."),
+    USE_LOCKPICK(WindoomRPG.p + "Lockpicking", "I have no idea how to use this.");
     
     //get permissions and warnings v  v
     private final String permission;
