@@ -3,17 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.shaneschulte.plugins.windoomrpg.skills;
-
-import org.bukkit.event.Listener;
+package com.shaneschulte.plugins.windoomrpg;
 
 /**
  *
  * @author Hikeru
  */
-
-
-public class RougePassives implements Listener  {
-
+public class RougePassives {
     
 }

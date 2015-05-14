@@ -10,8 +10,9 @@ import com.rit.sucy.commands.SenderType;
 import com.rit.sucy.config.Config;
 import com.shaneschulte.plugins.commands.RecruiterCommand;
 import com.shaneschulte.plugins.windoomrpg.skills.ArmorPassives;
+import com.shaneschulte.plugins.windoomrpg.skills.BlacksmithingPassives;
 import com.shaneschulte.plugins.windoomrpg.skills.MagePassives;
-import com.shaneschulte.plugins.windoomrpg.skills.RougePassives;
+import com.shaneschulte.plugins.windoomrpg.skills.RoguePassives;
 import com.shaneschulte.plugins.windoomrpg.skills.WarriorPassives;
 import com.shaneschulte.plugins.windoomrpg.traits.RecruiterTrait;
 import java.util.logging.Level;
@@ -45,7 +46,8 @@ public class WindoomRPG extends JavaPlugin {
             pm.registerEvents(new WarriorPassives(this), this);
             pm.registerEvents(new ArmorPassives(this), this);
             pm.registerEvents(new MagePassives(), this);
-            pm.registerEvents(new RougePassives(), this);
+            pm.registerEvents(new RoguePassives(), this);
+            pm.registerEvents(new BlacksmithingPassives(), this);
             
         //check if Citizens is present and enabled.
         if(getServer().getPluginManager().getPlugin("Citizens") == null || getServer().getPluginManager().getPlugin("Citizens").isEnabled() == false) {

@@ -7,6 +7,8 @@ package com.shaneschulte.plugins.windoomrpg;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -69,4 +71,11 @@ public class PlayerChecks {
         return (player.getInventory().firstEmpty() == -1);
     }
     
+    public static boolean isInAnvilInventory(Player player) {
+        if (player.getInventory() != null) {
+            return player.getOpenInventory().getType() == InventoryType.ANVIL;
+        }
+        
+        return false;
+    }
 }
