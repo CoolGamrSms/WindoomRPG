@@ -40,12 +40,12 @@ public class WDmsg {
 	
 	
 	public static void message(CommandSender s, String msg) {
-		s.sendMessage(ChatColor.GOLD + ChatColor.translateAlternateColorCodes('%', msg));
+		s.sendMessage(ChatColor.GOLD + ChatColor.translateAlternateColorCodes('&', msg));
 	}
 	
 	
 	private static void msgColor(CommandSender s, ChatColor color, String msg) {
-		s.sendMessage(prefix + color + ChatColor.translateAlternateColorCodes('%', msg));
+		s.sendMessage(prefix + color + ChatColor.translateAlternateColorCodes('&', msg));
 	}
 	
 }

@@ -20,7 +20,17 @@ public enum RPGperms {
     USE_DIAMOND_ARMOR(WindoomRPG.p + "DiamondArmor", "This armor is too heavy." /*"You must be a Warrior to equip diamond armor"*/), 
     ENCHANT_ITEMS(WindoomRPG.p + "ItemEnchants", "This book is far to complex for me."),
     USE_IRON_ARMOR(WindoomRPG.p + "IronArmor", "This armor is too heavy."),
-    USE_LOCKPICK(WindoomRPG.p + "Lockpicking", "I have no idea how to use this.");
+    USE_LOCKPICK(WindoomRPG.p + "Lockpicking", "I have no idea how to use this."),
+    
+    RECIEVE_CAPTURE_MESSAGES(WindoomRPG.p + "captures.messages", ""),
+    FORTRESS_CREATE(WindoomRPG.p + "fort.create", ""),
+    FORTRESS_RENAME(WindoomRPG.p + "fort.rename", ""),
+    FORTRESS_MODTAG(WindoomRPG.p + "fort.modtag", ""),
+    FORTRESS_MODCLAN(WindoomRPG.p + "fort.modclan", ""),
+    FORTRESS_REMOVE(WindoomRPG.p + "fort.remove", ""),
+    FORTRESS_LIST(WindoomRPG.p + "fort.list", ""),
+    CAPTURE_ADMIN(WindoomRPG.p + "fort.admin", "");
+    //add command perms here later :)
     
     //get permissions and warnings v  v
     private final String permission;
@@ -36,6 +46,14 @@ public enum RPGperms {
     }
 
     public String getWarning() {
+        return warning;
+    }
+    
+    public String p() {
+        return permission;
+    }
+
+    public String w() {
         return warning;
     }
 }

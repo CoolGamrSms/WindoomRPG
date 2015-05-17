@@ -48,7 +48,7 @@ public class ArmorPassives extends BukkitRunnable implements Listener {
     //run from main class like every 2 seconds
     @Override
     public void run() {
-        for (Player p : plugin.getServer().getOnlinePlayers()) {
+       /* for (Player p : plugin.getServer().getOnlinePlayers()) {
             boolean msg = false;
             if (!p.hasPermission(RPGperms.USE_IRON_ARMOR.getPermission()) && PlayerChecks.removeArmorType(p, "iron")) {
                 WDmsg.bad(p, RPGperms.USE_IRON_ARMOR.getWarning());
@@ -57,7 +57,7 @@ public class ArmorPassives extends BukkitRunnable implements Listener {
             if (!p.hasPermission(RPGperms.USE_DIAMOND_ARMOR.getPermission()) && PlayerChecks.removeArmorType(p, "diamond")) {
                 if(!msg) WDmsg.bad(p, RPGperms.USE_DIAMOND_ARMOR.getWarning());
             }
-        }
+        }*/
 
     }
 }

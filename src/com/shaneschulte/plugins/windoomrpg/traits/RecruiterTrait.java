@@ -56,23 +56,23 @@ public class RecruiterTrait extends Trait {
                     if(myClan == null || otherClan == null) return;
                     if(p.isSneaking()) {
                         if(myClan.getSize()-otherClan.getSize() >= 5) {
-                            WDmsg.bad((CommandSender)p, plugin.getString("recruit-full"));
+                            WDmsg.bad((CommandSender)p, plugin.getLangString("recruit-full"));
                             return;
                         }
-                        WDmsg.nice((CommandSender)p, String.format(plugin.getString("recruited"), myClan.getName()));
+                        WDmsg.nice((CommandSender)p, String.format(plugin.getLangString("recruited"), myClan.getName()));
                         if(cp != null) plugin.getClanManager().deleteClanPlayer(cp);
                         plugin.getClanManager().getCreateClanPlayer(p.getUniqueId()).setClan(myClan);
                     }
                     else {
-                        WDmsg.info((CommandSender)p, String.format(plugin.getString("recruit"), myClan.getName()));
+                        WDmsg.info((CommandSender)p, String.format(plugin.getLangString("recruit"), myClan.getName()));
                     }
                 }
                 else {
                     if(cp.getClan().equals(myClan)) {
-                        WDmsg.nice((CommandSender)p, plugin.getString("recruited-positive"));
+                        WDmsg.nice((CommandSender)p, plugin.getLangString("recruited-positive"));
                     }
                     else {
-                        WDmsg.bad((CommandSender)p, plugin.getString("recruited-negative"));
+                        WDmsg.bad((CommandSender)p, plugin.getLangString("recruited-negative"));
                     }
                 }
             }
@@ -84,14 +84,14 @@ public class RecruiterTrait extends Trait {
                 if(pd.canProfess(c)) {
                     if(p.isSneaking()) {
                         pd.setClass(c);
-                        WDmsg.nice((CommandSender)p, String.format(plugin.getString("class-joined"), c.getName()));
+                        WDmsg.nice((CommandSender)p, String.format(plugin.getLangString("class-joined"), c.getName()));
                     }
                     else {
-                        WDmsg.info((CommandSender)p, String.format(plugin.getString("class"), c.getName()));
+                        WDmsg.info((CommandSender)p, String.format(plugin.getLangString("class"), c.getName()));
                     }
                 }
                 else {
-                    WDmsg.info((CommandSender)p, plugin.getString("no-comment"));
+                    WDmsg.info((CommandSender)p, plugin.getLangString("no-comment"));
                 }
             }
         }
