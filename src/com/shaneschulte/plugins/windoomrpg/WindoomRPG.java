@@ -9,6 +9,7 @@ import com.rit.sucy.commands.ConfigurableCommand;
 import com.rit.sucy.commands.SenderType;
 import com.rit.sucy.config.Config;
 import com.shaneschulte.plugins.commands.RecruiterCommand;
+import com.shaneschulte.plugins.windoomrpg.managers.TableManager;
 import com.shaneschulte.plugins.windoomrpg.skills.ArmorPassives;
 import com.shaneschulte.plugins.windoomrpg.skills.BlacksmithingPassives;
 import com.shaneschulte.plugins.windoomrpg.skills.MagePassives;
@@ -33,6 +34,7 @@ public class WindoomRPG extends JavaPlugin {
     static String p = "wrpg.";
     private SimpleClans sc;
     Config lang;
+    private TableManager tableManager;
     
     @Override
     public void onEnable() {
@@ -74,6 +76,10 @@ public class WindoomRPG extends JavaPlugin {
         lang = new Config(this, "lang");
         lang.saveDefaultConfig();
         
+        //Register the table manager
+        tableManager = new TableManager(this);
+        TableManager.loadTables();
+        
         //Register commands
         ConfigurableCommand myRoot = new ConfigurableCommand(this, "recruiter", SenderType.PLAYER_ONLY);
         ConfigurableCommand myCommand = new ConfigurableCommand(
@@ -108,6 +114,9 @@ public class WindoomRPG extends JavaPlugin {
     }
     @Override
     public void onDisable() {
+        
+        TableManager.saveTables();
+        
         //Print disable message
         PluginDescriptionFile pdfFile = this.getDescription();
         this.getLogger().log(Level.INFO, "{0} version {1} by {2} is disabled.", 
