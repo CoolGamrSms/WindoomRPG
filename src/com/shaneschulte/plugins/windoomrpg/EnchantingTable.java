@@ -8,7 +8,6 @@ import com.shaneschulte.plugins.windoomrpg.managers.TableManager;
 import com.shaneschulte.plugins.windoomrpg.managers.TableManager.EnchantWeight;
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -97,7 +96,6 @@ final public class EnchantingTable {
             totalWeight += ew.getWeight();
         }
         int index = -1;
-        Bukkit.getServer().getPlayer("CoolGamrSms").sendMessage(Integer.toString(possible.size()));
         double random = Math.random()*totalWeight;
         for(int i = 0; i < possible.size(); ++i) {
             random -= possible.get(i).getWeight();
