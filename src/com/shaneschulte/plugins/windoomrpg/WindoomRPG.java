@@ -12,6 +12,8 @@ import com.shaneschulte.plugins.commands.Fortress.CreateFortress;
 import com.shaneschulte.plugins.commands.Fortress.List;
 import com.shaneschulte.plugins.commands.Fortress.ModTag;
 import com.shaneschulte.plugins.commands.Fortress.Name;
+import com.shaneschulte.plugins.commands.Fortress.Point;
+import com.shaneschulte.plugins.commands.Fortress.Radius;
 import com.shaneschulte.plugins.commands.Fortress.Remove;
 import com.shaneschulte.plugins.commands.Fortress.SetClan;
 import com.shaneschulte.plugins.commands.RecruiterCommand;
@@ -127,6 +129,24 @@ public class WindoomRPG extends JavaPlugin {
                 ),
                 new ConfigurableCommand(
                         this,
+                        "setpoint",
+                        SenderType.ANYONE,
+                        new Point(),
+                        "sets a fort's cap point at your location",
+                        "<name>",
+                        RPGperms.FORTRESS_RENAME.p()
+                ),
+                new ConfigurableCommand(
+                        this,
+                        "setradius",
+                        SenderType.ANYONE,
+                        new Radius(),
+                        "sets a fort's cap point radius",
+                        "<name> <radius>",
+                        RPGperms.FORTRESS_RENAME.p()
+                ),
+                new ConfigurableCommand(
+                        this,
                         "modtag",
                         SenderType.ANYONE,
                         new ModTag(),
@@ -220,6 +240,10 @@ public class WindoomRPG extends JavaPlugin {
         this.getLogger().log(Level.INFO, "{0} version {1} by {2} is disabled.",
                 new Object[]{pdfFile.getName(), pdfFile.getVersion(), pdfFile.getAuthors().get(0)});
 
+        for (Fortress fort : AreaManager.getFortresses()) {
+            fort.saveTempData();
+        }
+        
         fortress.saveConfig();
         
         effectManager.dispose();

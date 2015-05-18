@@ -29,6 +29,8 @@ public enum RPGperms {
     FORTRESS_MODCLAN(WindoomRPG.p + "fort.modclan", ""),
     FORTRESS_REMOVE(WindoomRPG.p + "fort.remove", ""),
     FORTRESS_LIST(WindoomRPG.p + "fort.list", ""),
+    FORTRESS_SETCAPPOINT(WindoomRPG.p + "fort.setpoint", ""),
+    FORTRESS_SETRADIUS(WindoomRPG.p + "fort.setradius", ""),
     CAPTURE_ADMIN(WindoomRPG.p + "fort.admin", "");
     //add command perms here later :)
     

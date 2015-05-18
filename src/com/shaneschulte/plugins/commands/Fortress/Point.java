@@ -10,38 +10,36 @@ import com.rit.sucy.commands.IFunction;
 import com.shaneschulte.plugins.windoomrpg.WDmsg;
 import com.shaneschulte.plugins.windoomrpg.WindoomRPG;
 import com.shaneschulte.plugins.windoomrpg.capture.AreaManager;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 /**
  *
  * @author Hikeru
  */
-public class ModTag implements IFunction {
+public class Point implements IFunction {
 
     @Override
     public void execute(ConfigurableCommand command, Plugin plugin, CommandSender sender, String[] args) {
-        if (args.length >= 2) {
+        if (args.length == 1) {
             if (AreaManager.getFortressByName(args[0]) == null) {
-                WDmsg.bad(sender, "&e" + args[0] + WDmsg.bad + " is not a real fortress.");
+                WDmsg.bad(sender, "&b" + args[0] + WDmsg.bad + " is not a real fortress.");
                 return;
             }
 
-            StringBuilder sb = new StringBuilder();
-            for (int i = 1; i < args.length; i++) {
-                // creates empty builder, capacity 16
-                // adds 9 character string at beginning
-                sb.append(args[i]);
-                if (args.length - 1 != i) {
-                    sb.append(" ");
-                }
+            Player p = (Player) sender;
+            Location loc = p.getLocation();
 
-            }
-
-            AreaManager.getFortressByName(args[0]).setTag(sb.toString());
+            AreaManager.getFortressByName(args[0]).setCapPoint(p.getLocation());
+            WDmsg.nice(p, "Set &ecapture point " + WDmsg.info + "to (&b"
+                    + loc.getBlockX() + WDmsg.info
+                    + ",&b " + loc.getBlockY() + WDmsg.info
+                    + ",&b " + loc.getBlockZ() + WDmsg.info
+                    + ")");
 
             WindoomRPG.fortress.saveConfig();
-            WDmsg.nice(sender, args[0] + WDmsg.nice + "'s tag was changed to &e" + sb.toString());
             AreaManager.loadFortressesFromConfig();
 
         } else {

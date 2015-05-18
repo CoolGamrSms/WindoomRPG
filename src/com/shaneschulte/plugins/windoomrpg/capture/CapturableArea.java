@@ -80,7 +80,7 @@ public class CapturableArea implements Listener {
 
     public ArrayList<Player> getPlayersInCaptureRadius() {
         //reset list
-        playersInCaptureArea = new ArrayList<Player>();
+        playersInCaptureArea = new ArrayList<>();
         //ProtectedRegion region = WindoomRPG.getWorldGuard().getRegionManager(capPoint.getWorld()).getRegion(type + "_" + id);
         String hi = type + "_" + id;
 
@@ -130,21 +130,21 @@ public class CapturableArea implements Listener {
      }*/
     public void onClaim(Clan clan) {
         if (this.getClanInControl() != null) {
-            Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', this.getClanInControl().getTagLabel() + "&b"
+            Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6&l<" + this.getClanInControl().getTagLabel() + "&6&l> &b"
                     + getTag() + " &7has been captured by &e" + clan.getTagLabel() + "&7!"));
         } else {
             Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&b" + getTag()
-                    + " &7has been captured by &e" + clan.getTagLabel() + "&7!"));
+                    + " &7has been captured by &e&6&l<" + clan.getTagLabel() + "&6&l>&7!"));
         }
     }
 
     public void onAttack(Clan clan) {
         if (this.getClanInControl() != null) {
-            Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', this.getClanInControl().getTagLabel() + "&b"
-                    + getTag() + " &7is under attack from &e" + clan.getTagLabel() + "&7!"));
+            Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6&l<" + this.getClanInControl().getTagLabel() + "&6&l>&b "
+                    + getTag() + " &7is under attack from &e&6&l<" + clan.getTagLabel() + "&6&l>&7!"));
         } else {
             Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&b " + getTag()
-                    + " &7is under attack from &e" + clan.getTagLabel() + "&7!"));
+                    + " &7is under attack from &e&6&l<" + clan.getTagLabel() + "&6&l>&7!"));
         }
     }
 
@@ -222,7 +222,7 @@ public class CapturableArea implements Listener {
     }
 
     public void setClanInControl(Clan clanInControl) {
-        forceClaim(clanInControl);
+        if (clanInControl != null) this.clanInControl = clanInControl;
         this.clanInControl = clanInControl;
         if (clanInControl != null) {
             wplugin.getFortressConfig().getConfig().set(type + "." + id + ".clan", clanInControl.getTag());
@@ -249,6 +249,10 @@ public class CapturableArea implements Listener {
             wplugin.getFortressConfig().getConfig().set(type + "." + id + ".q1.y", q1.getBlockY());
             wplugin.getFortressConfig().getConfig().set(type + "." + id + ".q1.z", q1.getBlockZ());
         }
+    }
+    
+    public void saveTempData() {
+        wplugin.getFortressConfig().getConfig().set(type + "." + id + ".health", health);
     }
 
     public BlockVector getQ2() {

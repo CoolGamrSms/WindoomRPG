@@ -114,11 +114,12 @@ public class BossBarApi {
             //Location toSpawn = new Location(player.getLocation().getWorld(), player.getLocation().getBlockX(), -20, player.getLocation().getBlockZ());
 
             //String clanName = "&7"
-            String message = ChatColor.translateAlternateColorCodes('&', "&4<&l" + fort.getTag() + "&4>&a&o " + fort.getCurrentModeTitle() + " &d&l" + (double)Math.round((health/3) * 10) / 10 + "&7%");
+            String message;
 
             if (fort.getClanInControl() != null) {
-                message = ChatColor.translateAlternateColorCodes('&', "&4&l<" + fort.getTag() + "&4&l>&7&o captured by &6&l<&7" + fort.getClanInControl().getTagLabel() + "&6&l> &d&l" + (double)Math.round((health/3) * 10) / 10 + "&7%");
-
+                message = ChatColor.translateAlternateColorCodes('&', "&4&l<&3" + fort.getTag() + "&4&l>&7&o captured by &6&l<&7" + fort.getClanInControl().getTagLabel() + "&6&l> &d&l" + (double) Math.round((health / 3) * 10) / 10 + "&7%");
+            } else {
+                message = ChatColor.translateAlternateColorCodes('&', "&4&l<&3" + fort.getTag() + "&4&l>&7&o " + fort.getCurrentModeTitle() + " &d&l" + (double) Math.round((health / 3) * 10) / 10 + "&7%");
             }
             sendSpawnPacket(player, toSpawn, message, health);
 

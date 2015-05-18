@@ -42,7 +42,9 @@ public class Fortress extends CapturableArea {
         this.clanInControl = clanInControl;
         this.tag = "&b" + name;
 
-        super.onNeutral();
+        //if is not first time existing
+        if (wplugin.getFortressConfig().getConfig().get(type + "." + id + ".health") == null)
+            super.onNeutral();
 
         finish();
     }
@@ -77,8 +79,9 @@ public class Fortress extends CapturableArea {
                 //Bukkit.getServer().broadcastMessage(p.getName());
                 for (Player conqueror : this.getPlayersInCaptureRadius()) {
                     if (getClanInControl() != null && !plugin.getClanManager().getClanByPlayerUniqueId(p.getUniqueId()).equals(getClanInControl())) {
-                        setClanInControl(plugin.getClanManager().getClanByPlayerUniqueId(p.getUniqueId()));
+                        forceClaim(plugin.getClanManager().getClanByPlayerUniqueId(conqueror.getUniqueId()));
                         health = 300;
+                        break;
                     }
                 }
             }
@@ -96,6 +99,7 @@ public class Fortress extends CapturableArea {
 
         }
     }
+    
 
     private void reloadVars() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
