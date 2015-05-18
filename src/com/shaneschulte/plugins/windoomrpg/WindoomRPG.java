@@ -36,8 +36,6 @@ import java.util.logging.Level;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -45,7 +43,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -194,12 +191,6 @@ public class WindoomRPG extends JavaPlugin {
             }
         }.runTaskLater(this.plugin, 20);
 
-
-        /*Castle AyriaKeep = new Castle(this);
-         Castle AyriaKeep2 = new Castle(this);
-         Castle AyriaKeep4 = new Castle(this);
-         Castle AyriaKeep6 = new Castle(this);
-         Castle AyriaKeep8 = new Castle(this);*/
         this.getLogger().log(Level.INFO, "{0} version {1} by {2} is enabled!",
                 new Object[]{pdfFile.getName(), pdfFile.getVersion(), pdfFile.getAuthors().get(0)});
     }
@@ -235,7 +226,6 @@ public class WindoomRPG extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        //Print disable message
         PluginDescriptionFile pdfFile = this.getDescription();
         this.getLogger().log(Level.INFO, "{0} version {1} by {2} is disabled.",
                 new Object[]{pdfFile.getName(), pdfFile.getVersion(), pdfFile.getAuthors().get(0)});
@@ -264,6 +254,7 @@ public class WindoomRPG extends JavaPlugin {
         } catch (Exception e) {
 
         }
+        
         //Attempt to hook into SimpleClans
         if (!hookSimpleClans()) {
             this.getLogger().log(Level.SEVERE, "Failed to hook into SimpleClans! Disabling...");

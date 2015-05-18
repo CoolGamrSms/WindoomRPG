@@ -5,7 +5,6 @@
  */
 package com.shaneschulte.plugins.windoomrpg.capture;
 
-import com.shaneschulte.plugins.windoomrpg.RPGperms;
 import com.shaneschulte.plugins.windoomrpg.WindoomRPG;
 import static com.shaneschulte.plugins.windoomrpg.WindoomRPG.getWorldGuard;
 import com.sk89q.worldedit.BlockVector;
@@ -14,7 +13,6 @@ import com.sk89q.worldguard.bukkit.BukkitUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.util.ArrayList;
 import net.sacredlabyrinth.phaed.simpleclans.Clan;
@@ -26,7 +24,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  *
@@ -34,6 +31,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class CapturableArea implements Listener {
 
+    //Attack states
     private static final int UNDERATTACK = -1, NEUTRAL = 0, UNDERCONTROL = 1;
     protected int currentMode = NEUTRAL;
     protected int health = 300; //ender dragon health on spigot servers
@@ -45,6 +43,7 @@ public class CapturableArea implements Listener {
     protected ArrayList<Player> playersInArea = new ArrayList<Player>();
     protected ArrayList<Player> playersInCaptureArea = new ArrayList<Player>();
 
+    //default vars
     protected String name = "Undiscovered Fortress", tag = "&7Undiscovered Fortress", id = "Unknown";
     protected Location capPoint = null;
     protected BlockVector q1, q2;
@@ -55,18 +54,15 @@ public class CapturableArea implements Listener {
     public CapturableArea(JavaPlugin plugin) {
         this.plugin = plugin;
         this.wplugin = (WindoomRPG) Bukkit.getServer().getPluginManager().getPlugin("WindoomRPG");
-
-        //this.runTaskTimer(plugin, 20, 20);
     }
 
     public ArrayList<Player> getPlayersInArea() {
-        //reset list
+        //reset old list
         playersInArea = new ArrayList<>();
-        //ProtectedRegion region = WindoomRPG.getWorldGuard().getRegionManager(capPoint.getWorld()).getRegion(type + "_" + id);
-        String hi = type + "_" + id;
+        String regionNameCc = type + "_" + id;
 
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-            if (isWithinRegion(p, hi)) {
+            if (isWithinRegion(p, regionNameCc)) {
                 playersInArea.add(p);
             }
         }
@@ -75,22 +71,20 @@ public class CapturableArea implements Listener {
     }
 
     public void update() {
-        //runs every 2 seconds
+        
     }
 
     public ArrayList<Player> getPlayersInCaptureRadius() {
-        //reset list
+        //remove old list
         playersInCaptureArea = new ArrayList<>();
-        //ProtectedRegion region = WindoomRPG.getWorldGuard().getRegionManager(capPoint.getWorld()).getRegion(type + "_" + id);
-        String hi = type + "_" + id;
 
+        //get player's who's position is less than the radius
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
             if (capPoint.distance(p.getLocation()) <= getCapRadius()) {
                 playersInCaptureArea.add(p);
             }
         }
         return playersInCaptureArea;
-
     }
 
     public int getCurrentMode() {
@@ -114,6 +108,7 @@ public class CapturableArea implements Listener {
     }
 
     public void forceClaim(Clan clan) {
+        setClanInControl(clan);
         onClaim(clan);
         this.currentMode = UNDERCONTROL;
     }
@@ -123,11 +118,6 @@ public class CapturableArea implements Listener {
         this.currentMode = NEUTRAL;
     }
 
-    /*public void changeMode(int newMode) {
-     if (newMode == UNDERCONTROL) onClaim();
-     if (newMode == UNDERATTACK) onAttack();
-     else onNeutral();
-     }*/
     public void onClaim(Clan clan) {
         if (this.getClanInControl() != null) {
             Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6&l<" + this.getClanInControl().getTagLabel() + "&6&l> &b"
@@ -200,14 +190,15 @@ public class CapturableArea implements Listener {
     public void setCapPoint(Location capPoint) {
         this.capPoint = capPoint;
 
+        String cc = type + "." + id;
         if (capPoint.getWorld() == null) {
-            wplugin.getFortressConfig().getConfig().set(type + "." + id + ".capPoint.world", "world");
+            wplugin.getFortressConfig().getConfig().set(cc + ".capPoint.world", "world");
         } else {
-            wplugin.getFortressConfig().getConfig().set(type + "." + id + ".capPoint.world", capPoint.getWorld().getName());
+            wplugin.getFortressConfig().getConfig().set(cc + ".capPoint.world", capPoint.getWorld().getName());
         }
-        wplugin.getFortressConfig().getConfig().set(type + "." + id + ".capPoint.x", capPoint.getBlockX());
-        wplugin.getFortressConfig().getConfig().set(type + "." + id + ".capPoint.y", capPoint.getBlockY());
-        wplugin.getFortressConfig().getConfig().set(type + "." + id + ".capPoint.z", capPoint.getBlockZ());
+        wplugin.getFortressConfig().getConfig().set(cc + ".capPoint.x", capPoint.getBlockX());
+        wplugin.getFortressConfig().getConfig().set(cc + ".capPoint.y", capPoint.getBlockY());
+        wplugin.getFortressConfig().getConfig().set(cc + ".capPoint.z", capPoint.getBlockZ());
     }
 
     public void setCapRadius(int capRadius) {
@@ -228,11 +219,11 @@ public class CapturableArea implements Listener {
             wplugin.getFortressConfig().getConfig().set(type + "." + id + ".clan", clanInControl.getTag());
         }
 
+        //add owners to WorldGuard region
         if (getClanInControl() != null && WindoomRPG.getWorldGuard().getRegionManager(capPoint.getWorld()).getRegion("fortress" + "_" + getId()) != null) {
             ProtectedRegion region = WindoomRPG.getWorldGuard().getRegionManager(capPoint.getWorld()).getRegion("fortress" + "_" + getId());
             region.getOwners().removeAll();
             for (ClanPlayer p : wplugin.getClanManager().getAllClanPlayers()) {
-                //owners.addPlayer(p.toPlayer());
                 region.getOwners().addPlayer(p.getName());
             }
         }

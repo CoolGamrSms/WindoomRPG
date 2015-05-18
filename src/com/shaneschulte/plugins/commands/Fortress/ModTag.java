@@ -27,15 +27,13 @@ public class ModTag implements IFunction {
                 return;
             }
 
+            //build tag efficently from args
             StringBuilder sb = new StringBuilder();
             for (int i = 1; i < args.length; i++) {
-                // creates empty builder, capacity 16
-                // adds 9 character string at beginning
                 sb.append(args[i]);
                 if (args.length - 1 != i) {
                     sb.append(" ");
                 }
-
             }
 
             AreaManager.getFortressByName(args[0]).setTag(sb.toString());

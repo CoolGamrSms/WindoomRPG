@@ -29,9 +29,6 @@ public class Radius implements IFunction {
                 return;
             }
 
-            Player p = (Player) sender;
-            Location loc = p.getLocation();
-
             try {
                 int num = Integer.parseInt(args[1]);
             } catch (NumberFormatException nfe) {
@@ -39,9 +36,12 @@ public class Radius implements IFunction {
                 return;
             }
 
+            //set radius
             AreaManager.getFortressByName(args[0]).setCapRadius(Integer.parseInt(args[1]));
             WDmsg.nice(sender, args[0] + WDmsg.nice + "'s cap radius is now &e" + args[1]);
 
+            
+            //save config
             WindoomRPG.fortress.saveConfig();
             AreaManager.loadFortressesFromConfig();
 

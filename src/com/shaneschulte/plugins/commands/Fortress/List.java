@@ -28,6 +28,8 @@ public class List implements IFunction {
             if (fort.getClanInControl() != null) {
                 clanTag = fort.getClanInControl().getTagLabel();
             }
+            
+            //message
             WDmsg.info((Player) sender, "&oid: &e&o" + fort.getId() + WDmsg.info + ", name: &a" + fort.getName() + WDmsg.info + ", tag: "
                     + fort.getTag() + WDmsg.info + ", clan: &d" + clanTag);
 

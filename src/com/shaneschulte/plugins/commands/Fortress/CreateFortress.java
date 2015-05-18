@@ -12,7 +12,6 @@ import com.shaneschulte.plugins.windoomrpg.WindoomRPG;
 import com.shaneschulte.plugins.windoomrpg.capture.Fortress;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.bukkit.selections.Selection;
-import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -41,10 +40,9 @@ public class CreateFortress implements IFunction {
                 return;
             }
 
-            //Create worldguard region with prefix fortress_
             name = args[0];
 
-            //Config fortressN = plugin.getFortressConfig();
+            //set initial 
             Fortress fort = new Fortress(plugin, name, name, p.getLocation(), null);
             fort.setQ1(new BlockVector(sel.getNativeMinimumPoint()));
             fort.setQ2(new BlockVector(sel.getNativeMaximumPoint()));
@@ -56,15 +54,10 @@ public class CreateFortress implements IFunction {
             fort.setTag("&b" + name);
 
             //Type is always fortress for fortress command
+            //Create worldguard region with prefix fortress_
             ProtectedCuboidRegion region = new ProtectedCuboidRegion("fortress" + "_" + fort.getId(),
                     new BlockVector(sel.getNativeMinimumPoint()),
                     new BlockVector(sel.getNativeMaximumPoint()));
-
-            //Set default owners
-            //DefaultDomain owners = new DefaultDomain();
-           // owners.addPlayer(WindoomRPG.getWorldGuard().wrapPlayer(p));
-
-            //region.setOwners(owners);
 
             WindoomRPG.getWorldGuard().getRegionManager(p.getWorld()).addRegion(region);
 
@@ -76,10 +69,6 @@ public class CreateFortress implements IFunction {
                     + ",&e " + fort.getCapPoint().getBlockY() + WDmsg.nice
                     + ",&e " + fort.getCapPoint().getBlockZ() + WDmsg.nice
                     + ") with radius &e" + fort.getCapRadius() + WDmsg.nice + ".");
-
-            //BossBarApi.sendFortressInfo(p, fort, 20);
-            //BossBarApi.removeBar(p, 102);
-            //plugin.setFortressConfig(fortressN);
             return;
         }
         command.displayHelp(sender, 1);

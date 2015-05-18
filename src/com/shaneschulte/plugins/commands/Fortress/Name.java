@@ -27,6 +27,7 @@ public class Name implements IFunction {
                 return;
             }
 
+            //simple enough
             AreaManager.getFortressByName(args[0]).setName(args[1]);
             WDmsg.nice(sender, args[0] + WDmsg.nice + "'s name was changed to &e" + args[1]);
             
@@ -34,9 +35,6 @@ public class Name implements IFunction {
             AreaManager.loadFortressesFromConfig();
         } else {
             command.displayHelp(sender, 1);
-
         }
-
     }
-
 }

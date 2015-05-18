@@ -32,6 +32,7 @@ public class Point implements IFunction {
             Player p = (Player) sender;
             Location loc = p.getLocation();
 
+            //set cap point to player location
             AreaManager.getFortressByName(args[0]).setCapPoint(p.getLocation());
             WDmsg.nice(p, "Set &ecapture point " + WDmsg.info + "to (&b"
                     + loc.getBlockX() + WDmsg.info
@@ -39,6 +40,7 @@ public class Point implements IFunction {
                     + ",&b " + loc.getBlockZ() + WDmsg.info
                     + ")");
 
+            //save config
             WindoomRPG.fortress.saveConfig();
             AreaManager.loadFortressesFromConfig();
 

@@ -33,8 +33,9 @@ public class Remove implements IFunction {
         Player p = (Player) sender;
        // p.getServer().broadcastMessage(ChatColor.AQUA + Arrays.toString(args)/*.substring(1, args.length -1)*/);
 
-        String name;
         if (args.length == 1) {
+            
+            //remove region
             RegionManager rm = WindoomRPG.getWorldGuard().getRegionManager(p.getWorld());
             if (rm.getRegion("fortress_" + args[0]) == null) {
                 WDmsg.bad(p, "region &efortress_&6" + args[0] + WDmsg.bad + " was not found");
@@ -43,6 +44,7 @@ public class Remove implements IFunction {
                 WDmsg.nice(p, "region &efortress_&6" + args[0] + WDmsg.nice + " was removed");
             }
 
+            //remove from config
             Config fortressN = plugin.getFortressConfig();
             if (fortressN.getConfig().getConfigurationSection("fortress." + args[0]) != null) {
                 fortressN.getConfig().set("fortress." + args[0], null);
@@ -51,6 +53,7 @@ public class Remove implements IFunction {
                 WDmsg.bad(p, "configuration section &afortress.&2" + args[0] + WDmsg.bad + " was not found");
             }
 
+            //remove object area
             Fortress fort = AreaManager.getFortress(args[0]);
             if (fort == null) {
                 WDmsg.bad(p, "fortress &c" + args[0] + WDmsg.bad + " was not found");
@@ -58,9 +61,8 @@ public class Remove implements IFunction {
             } else {
                 AreaManager.removeFortress(fort.getName());
                 WDmsg.nice(p, "fortress &c" + args[0] + WDmsg.nice + " was removed");
-
             }
-
+            
             return;
         }
 

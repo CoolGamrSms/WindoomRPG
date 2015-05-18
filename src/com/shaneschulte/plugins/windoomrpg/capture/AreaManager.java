@@ -27,25 +27,30 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class AreaManager extends BukkitRunnable {
 
     private static WindoomRPG plugin = null;
-
     static ArrayList<Fortress> fortresses = new ArrayList<>();
+
+    //refresh time for all areas
+    int refreshTime = 20;
 
     public AreaManager() {
         this.plugin = (WindoomRPG) Bukkit.getServer().getPluginManager().getPlugin("WindoomRPG");
-
-        this.runTaskTimer(plugin, 20, 20);
+        this.runTaskTimer(plugin, 20, refreshTime);
     }
 
+    //reinitiates all areas
     public static void loadFortressesFromConfig() {
         fortresses = new ArrayList<>();
         FileConfiguration conf = plugin.getFortressConfig().getConfig();
-        
+
         plugin.getFortressConfig().saveConfig();
 
         if (conf.getConfigurationSection("fortress") != null) {
             for (String key : conf.getConfigurationSection("fortress").getKeys(false)) {
                 ConfigurationSection cc = conf.getConfigurationSection("fortress." + key);
+
+                //get config for fortresses
                 if (cc != null) {
+                    //create new fort and set data
                     Fortress fort = new Fortress(plugin, key, cc.getString("name"), new Location(
                             Bukkit.getServer().getWorld(cc.getString("capPoint.world")), cc.getInt("capPoint.x"), cc.getInt("capPoint.y"), cc.getInt("capPoint.z")), null);
                     fort.setQ1(new BlockVector(cc.getInt("q1.x"), cc.getInt("q1.y"), cc.getInt("q1.z")));
@@ -54,37 +59,35 @@ public class AreaManager extends BukkitRunnable {
                     fort.setCapRadius(cc.getInt("capRadius"));
                     fort.setCapTimeInSeconds(cc.getInt("capTimeInSeconds"));
                     fort.id = key;
+                    fort.health = cc.getInt("health");
 
+                    //get clan
                     if (cc.getString("clan") != null) {
                         fort.setClanInControl(plugin.getClanManager().getClan(cc.getString("clan")));
                     }
 
+                    //get region
                     ProtectedCuboidRegion region = new ProtectedCuboidRegion("fortress" + "_" + key,
                             fort.getQ1(),
                             fort.getQ2());
 
-                    //DefaultDomain owners = new DefaultDomain();
-
+                    //add owners to region
                     if (fort.getClanInControl() != null) {
                         for (ClanPlayer p : plugin.getClanManager().getAllClanPlayers()) {
-                            //owners.addPlayer(p.toPlayer());
                             region.getOwners().addPlayer(p.getName());
                         }
                     }
                     try {
                         WindoomRPG.getWorldGuard().getRegionManager(fort.capPoint.getWorld()).save();
-                        //region.setOwners(owners);
                     } catch (ProtectionDatabaseException ex) {
                         Logger.getLogger(AreaManager.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
                     WindoomRPG.getWorldGuard().getRegionManager(fort.capPoint.getWorld()).addRegion(region);
+                    
+                    //add fortress to array
                     AreaManager.addFortress(fort);
 
                     Bukkit.getLogger().log(Level.INFO, "{0}{1}loaded", new Object[]{ChatColor.AQUA, key});
-                    /* List list = conf.getList("fortress." + key + ".capPoint");
-                     Bukkit.getServer().broadcastMessage(list.size() + "");*/
-                    //Fortress fort = new Fortress(plugin, conf.get("fortress."))
                 }
             }
         }
@@ -92,6 +95,7 @@ public class AreaManager extends BukkitRunnable {
 
     @Override
     public void run() {
+        //update all fortresses
         for (Fortress f : fortresses) {
             if (f != null) {
                 f.update();
@@ -136,36 +140,42 @@ public class AreaManager extends BukkitRunnable {
                 return f;
             }
         }
-
         return null;
     }
 
     public static void saveFortressesToConfig() {
         for (Fortress fort : fortresses) {
-            plugin.getFortressConfig().getConfig().set(fort.type + "." + fort.id + ".name", fort.getName());
-            plugin.getFortressConfig().getConfig().set(fort.type + "." + fort.id + ".tag", fort.tag);
-            plugin.getFortressConfig().getConfig().set(fort.type + "." + fort.id + ".capTimeInSeconds", fort.capTimeInSeconds);
-            plugin.getFortressConfig().getConfig().set(fort.type + "." + fort.id + ".capRadius", fort.capRadius);
+            String cc = fort.type + "." + fort.id;
+            
+            //save vars
+            plugin.getFortressConfig().getConfig().set(cc + ".name", fort.getName());
+            plugin.getFortressConfig().getConfig().set(cc + ".tag", fort.tag);
+            plugin.getFortressConfig().getConfig().set(cc + ".capTimeInSeconds", fort.capTimeInSeconds);
+            plugin.getFortressConfig().getConfig().set(cc + ".capRadius", fort.capRadius);
 
             if (fort.capPoint != null) {
+                //defualt world is "world"
                 if (fort.capPoint.getWorld() == null) {
-                    plugin.getFortressConfig().getConfig().set(fort.type + "." + fort.id + ".capPoint.world", "world");
+                    plugin.getFortressConfig().getConfig().set(cc + ".capPoint.world", "world");
                 } else {
-                    plugin.getFortressConfig().getConfig().set(fort.type + "." + fort.id + ".capPoint.world", fort.capPoint.getWorld().getName());
+                    plugin.getFortressConfig().getConfig().set(cc + ".capPoint.world", fort.capPoint.getWorld().getName());
                 }
-                plugin.getFortressConfig().getConfig().set(fort.type + "." + fort.id + ".capPoint.x", fort.capPoint.getBlockX());
-                plugin.getFortressConfig().getConfig().set(fort.type + "." + fort.id + ".capPoint.y", fort.capPoint.getBlockY());
-                plugin.getFortressConfig().getConfig().set(fort.type + "." + fort.id + ".capPoint.z", fort.capPoint.getBlockZ());
+                plugin.getFortressConfig().getConfig().set(cc + ".capPoint.x", fort.capPoint.getBlockX());
+                plugin.getFortressConfig().getConfig().set(cc + ".capPoint.y", fort.capPoint.getBlockY());
+                plugin.getFortressConfig().getConfig().set(cc + ".capPoint.z", fort.capPoint.getBlockZ());
             }
 
+            //save clan
             if (fort.clanInControl != null) {
-                plugin.getFortressConfig().getConfig().set(fort.type + "." + fort.id + ".clan", fort.clanInControl.getName());
+                plugin.getFortressConfig().getConfig().set(cc + ".clan", fort.clanInControl.getName());
             }
         }
 
+        //remove old fortresses
         for (Fortress f : AreaManager.getFortresses()) {
-            if (plugin.getFortressConfig().getConfig().getConfigurationSection("fortress." + f.getId()) == null)
+            if (plugin.getFortressConfig().getConfig().getConfigurationSection("fortress." + f.getId()) == null) {
                 fortresses.remove(f);
+            }
         }
 
     }
