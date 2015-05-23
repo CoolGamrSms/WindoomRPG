@@ -22,6 +22,7 @@ import com.shaneschulte.plugins.windoomrpg.capture.CapturableArea;
 import com.shaneschulte.plugins.windoomrpg.capture.Fortress;
 import com.shaneschulte.plugins.windoomrpg.commands.SoundCommand;
 import com.shaneschulte.plugins.windoomrpg.enchanting.TableManager;
+import com.shaneschulte.plugins.windoomrpg.protection.ArmorStandManager;
 import com.shaneschulte.plugins.windoomrpg.protection.ProtectionListener;
 import com.shaneschulte.plugins.windoomrpg.skills.ArmorPassives;
 import com.shaneschulte.plugins.windoomrpg.skills.BlacksmithingPassives;
@@ -48,7 +49,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  *
@@ -63,7 +63,7 @@ public class WindoomRPG extends JavaPlugin implements SkillPlugin {
     private AreaManager am;
 
     public EffectManager effectManager;
-    public static boolean effects = false;
+    public boolean effects = false;
 
     private WindoomRPG plugin;
 
@@ -82,6 +82,7 @@ public class WindoomRPG extends JavaPlugin implements SkillPlugin {
         pm.registerEvents(new MagePassives(), this);
         pm.registerEvents(new RoguePassives(), this);
         pm.registerEvents(new BlacksmithingPassives(), this);
+        pm.registerEvents(new ArmorStandManager(), this);
         //pm.registerEvents(new ProtectionListener(), this);
 
         //pm.registerEvents(new CapturableArea(this), this);
@@ -251,7 +252,7 @@ public class WindoomRPG extends JavaPlugin implements SkillPlugin {
         fortress.saveConfig();
         
         TableManager.saveTables();
-        effectManager.dispose();
+        //effectManager.dispose();
         HandlerList.unregisterAll((Listener) this);
     }
 
@@ -274,7 +275,7 @@ public class WindoomRPG extends JavaPlugin implements SkillPlugin {
         if (!hookSimpleClans()) {
             this.getLogger().log(Level.SEVERE, "Failed to hook into SimpleClans! Disabling...");
             getServer().getPluginManager().disablePlugin(this);
-            //return;
+            return;
         }
 
         if (EffectLib.instance() == null) {
