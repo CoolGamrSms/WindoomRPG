@@ -18,9 +18,9 @@ import com.shaneschulte.plugins.windoomrpg.commands.fortress.Remove;
 import com.shaneschulte.plugins.windoomrpg.commands.fortress.SetClan;
 import com.shaneschulte.plugins.windoomrpg.commands.RecruiterCommand;
 import com.shaneschulte.plugins.windoomrpg.capture.AreaManager;
-import com.shaneschulte.plugins.windoomrpg.capture.CapturableArea;
 import com.shaneschulte.plugins.windoomrpg.capture.Fortress;
 import com.shaneschulte.plugins.windoomrpg.commands.SoundCommand;
+import com.shaneschulte.plugins.windoomrpg.commands.fortress.SetHealth;
 import com.shaneschulte.plugins.windoomrpg.enchanting.TableManager;
 import com.shaneschulte.plugins.windoomrpg.protection.ArmorStandManager;
 import com.shaneschulte.plugins.windoomrpg.protection.ProtectionListener;
@@ -59,7 +59,6 @@ public class WindoomRPG extends JavaPlugin implements SkillPlugin {
     //permissions prefix
     public static String p = "wrpg.";
     private SimpleClans sc;
-    public static Config lang, fortress;
     private AreaManager am;
 
     public EffectManager effectManager;
@@ -72,6 +71,8 @@ public class WindoomRPG extends JavaPlugin implements SkillPlugin {
     @Override
     public void onEnable() {
         this.plugin = this;
+        
+        ConfigManager.setup();
         //Print enable message
         PluginDescriptionFile pdfFile = this.getDescription();
 
@@ -89,13 +90,6 @@ public class WindoomRPG extends JavaPlugin implements SkillPlugin {
 
         hookPlugins();
 
-        //Save default language config
-        lang = new Config(this, "lang");
-        lang.saveConfig();
-
-        fortress = new Config(this, "fortress");
-
-        fortress.saveConfig();
 
         //Register commands
         ConfigurableCommand myRoot = new ConfigurableCommand(this, "recruiter", SenderType.PLAYER_ONLY);
@@ -150,7 +144,7 @@ public class WindoomRPG extends JavaPlugin implements SkillPlugin {
                         new Point(),
                         "sets a fort's cap point at your location",
                         "<name>",
-                        RPGperms.FORTRESS_RENAME.p()
+                        RPGperms.FORTRESS_SETCAPPOINT.p()
                 ),
                 new ConfigurableCommand(
                         this,
@@ -159,7 +153,16 @@ public class WindoomRPG extends JavaPlugin implements SkillPlugin {
                         new Radius(),
                         "sets a fort's cap point radius",
                         "<name> <radius>",
-                        RPGperms.FORTRESS_RENAME.p()
+                        RPGperms.FORTRESS_SETRADIUS.p()
+                ),
+                new ConfigurableCommand(
+                        this,
+                        "sethealth",
+                        SenderType.ANYONE,
+                        new SetHealth(),
+                        "sets a fort's health",
+                        "<name> <health>",
+                        RPGperms.FORTRESS_SETHEALTH.p()
                 ),
                 new ConfigurableCommand(
                         this,
@@ -211,11 +214,11 @@ public class WindoomRPG extends JavaPlugin implements SkillPlugin {
     }
 
     public String getLangString(String name) {
-        return (String) lang.getConfig().get(name);
+        return (String) ConfigManager.getLang().getConfig().get(name);
     }
 
     public Config getFortressConfig() {
-        return fortress;
+        return ConfigManager.getFortress();
     }
 
     public AreaManager getAreaManager() {
@@ -223,7 +226,7 @@ public class WindoomRPG extends JavaPlugin implements SkillPlugin {
     }
 
     public void setFortressConfig(Config config) {
-        fortress = config;
+        ConfigManager.setFortress(config);
     }
 
     private boolean hookSimpleClans() {
@@ -241,6 +244,8 @@ public class WindoomRPG extends JavaPlugin implements SkillPlugin {
 
     @Override
     public void onDisable() {
+        this.saveDefaultConfig();
+        
         PluginDescriptionFile pdfFile = this.getDescription();
         this.getLogger().log(Level.INFO, "{0} version {1} by {2} is disabled.",
                 new Object[]{pdfFile.getName(), pdfFile.getVersion(), pdfFile.getAuthors().get(0)});
@@ -249,7 +254,7 @@ public class WindoomRPG extends JavaPlugin implements SkillPlugin {
             fort.saveTempData();
         }
         
-        fortress.saveConfig();
+        ConfigManager.getFortress().saveConfig();
         
         TableManager.saveTables();
         //effectManager.dispose();

@@ -6,6 +6,7 @@
 package com.shaneschulte.plugins.windoomrpg.capture;
 
 import com.shaneschulte.plugins.windoomrpg.BossBarApi;
+import com.shaneschulte.plugins.windoomrpg.ConfigManager;
 import com.shaneschulte.plugins.windoomrpg.WindoomRPG;
 import net.sacredlabyrinth.phaed.simpleclans.Clan;
 import org.bukkit.Bukkit;
@@ -51,15 +52,15 @@ public class Fortress extends CapturableArea {
     @Override
     public void update() {
         super.update();
-        for (Player p : getPlayersInArea()) {
-            BossBarApi.sendFortressInfo(p, this, health);
-            BossBarApi.removeBar(p, 20 * 2);
+
+        if (getPlayersInCaptureRadius().size() <= 0) {
+            health += ConfigManager.fAutoHealAmt() * 3;
         }
 
         //for every player that is within capture radius
         for (final Player p : this.getPlayersInCaptureRadius()) {
             //if not a member of the clan in control
-            if (getClanInControl() != null && !plugin.getClanManager().getClanByPlayerUniqueId(p.getUniqueId()).equals(getClanInControl())) {
+            if (getClanInControl() != null && plugin.getClanManager().getClanByPlayerUniqueId(p.getUniqueId()) != null && !plugin.getClanManager().getClanByPlayerUniqueId(p.getUniqueId()).equals(getClanInControl())) {
                 if (health > 0) {
                     health--;
 
@@ -70,7 +71,7 @@ public class Fortress extends CapturableArea {
 
                 }
                 //if a member of the clan in control
-            } else if (getClanInControl() != null && plugin.getClanManager().getClanByPlayerUniqueId(p.getUniqueId()).equals(getClanInControl())) {
+            } else if (getClanInControl() != null && plugin.getClanManager().getClanByPlayerUniqueId(p.getUniqueId()) != null && plugin.getClanManager().getClanByPlayerUniqueId(p.getUniqueId()).equals(getClanInControl())) {
                 if (health < 300) {
                     health++;
                 }
@@ -89,6 +90,16 @@ public class Fortress extends CapturableArea {
                 }
             }
         }
+        if (health > 300) health = 300;
+        if (health < 0) health = 0;
+
+        if (!(ConfigManager.fHideOnFullHealth() && health == 300)) {
+            for (Player p : getPlayersInArea()) {
+                BossBarApi.sendFortressInfo(p, this, health);
+                BossBarApi.removeBar(p, 20);
+            }
+        }
+        
     }
 
     @Override

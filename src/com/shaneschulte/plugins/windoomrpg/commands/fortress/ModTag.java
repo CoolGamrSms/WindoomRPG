@@ -7,6 +7,7 @@ package com.shaneschulte.plugins.windoomrpg.commands.fortress;
 
 import com.rit.sucy.commands.ConfigurableCommand;
 import com.rit.sucy.commands.IFunction;
+import com.shaneschulte.plugins.windoomrpg.ConfigManager;
 import com.shaneschulte.plugins.windoomrpg.WDmsg;
 import com.shaneschulte.plugins.windoomrpg.WindoomRPG;
 import com.shaneschulte.plugins.windoomrpg.capture.AreaManager;
@@ -27,18 +28,19 @@ public class ModTag implements IFunction {
                 return;
             }
 
-            //build tag efficently from args
+            //build tag efficently
             StringBuilder sb = new StringBuilder();
             for (int i = 1; i < args.length; i++) {
                 sb.append(args[i]);
                 if (args.length - 1 != i) {
                     sb.append(" ");
                 }
+
             }
 
             AreaManager.getFortressByName(args[0]).setTag(sb.toString());
 
-            WindoomRPG.fortress.saveConfig();
+            ConfigManager.getFortress().saveConfig();
             WDmsg.nice(sender, args[0] + WDmsg.nice + "'s tag was changed to &e" + sb.toString());
             AreaManager.loadFortressesFromConfig();
 

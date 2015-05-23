@@ -7,6 +7,7 @@ package com.shaneschulte.plugins.windoomrpg.commands.fortress;
 
 import com.rit.sucy.commands.ConfigurableCommand;
 import com.rit.sucy.commands.IFunction;
+import com.shaneschulte.plugins.windoomrpg.ConfigManager;
 import com.shaneschulte.plugins.windoomrpg.WDmsg;
 import com.shaneschulte.plugins.windoomrpg.WindoomRPG;
 import com.shaneschulte.plugins.windoomrpg.capture.AreaManager;
@@ -42,7 +43,7 @@ public class Radius implements IFunction {
 
             
             //save config
-            WindoomRPG.fortress.saveConfig();
+            ConfigManager.getFortress().saveConfig();
             AreaManager.loadFortressesFromConfig();
 
         } else {

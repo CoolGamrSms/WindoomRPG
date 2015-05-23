@@ -7,6 +7,7 @@ package com.shaneschulte.plugins.windoomrpg.commands.fortress;
 
 import com.rit.sucy.commands.ConfigurableCommand;
 import com.rit.sucy.commands.IFunction;
+import com.shaneschulte.plugins.windoomrpg.ConfigManager;
 import com.shaneschulte.plugins.windoomrpg.WDmsg;
 import com.shaneschulte.plugins.windoomrpg.WindoomRPG;
 import com.shaneschulte.plugins.windoomrpg.capture.AreaManager;
@@ -45,7 +46,7 @@ public class SetClan implements IFunction {
             //set clan
             AreaManager.getFortressByName(args[0]).setClanInControl(clan);
             WDmsg.nice(sender, args[0] + WDmsg.nice + "'s clan in control is now &e" + clan.getTag());
-            WindoomRPG.fortress.saveConfig();
+            ConfigManager.getFortress().saveConfig();
             AreaManager.loadFortressesFromConfig();
 
         } else {

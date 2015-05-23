@@ -26,7 +26,7 @@ public class List implements IFunction {
         for (Fortress fort : AreaManager.getFortresses()) {
             String clanTag = "none";
             if (fort.getClanInControl() != null) {
-                clanTag = fort.getClanInControl().getTagLabel(true);
+                clanTag = fort.getClanInControl().getColorTag();
             }
             
             //message
