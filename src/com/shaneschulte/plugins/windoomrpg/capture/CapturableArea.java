@@ -50,7 +50,7 @@ public class CapturableArea {
     protected Clan clanInControl = null;
 
     public CapturableArea(JavaPlugin plugin) {
-        this.wplugin = (WindoomRPG)plugin;
+        this.wplugin = (WindoomRPG) plugin;
         playersInArea = new ArrayList<>();
         playersInCaptureArea = new ArrayList<>();
     }
@@ -71,7 +71,7 @@ public class CapturableArea {
                     playersInCaptureArea.add(p);
                 }
             }
-        }    
+        }
     }
 
     public ArrayList<Player> getPlayersInCaptureRadius() {
@@ -111,21 +111,18 @@ public class CapturableArea {
 
     public void onClaim(Clan clan) {
         if (this.getClanInControl() != null) {
-            Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6&l<" + this.getClanInControl().getTagLabel(true) + "&6&l> &b"
-                    + getTag() + " &7has been captured by &e" + clan.getTagLabel(true) + "&7!"));
+            Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6&l<" + this.getClanInControl().getTag() + "&6&l> &b"
+                    + getTag() + " &7has been captured by &e" + clan.getColorTag() + "&7!"));
         } else {
-            Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&b" + getTag()
-                    + " &7has been captured by &e&6&l<" + clan.getTagLabel(true) + "&6&l>&7!"));
+            Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&b" + getTag() + " &7has been captured by &e" + clan.getColorTag() + "&7!"));
         }
     }
 
     public void onAttack(Clan clan) {
         if (this.getClanInControl() != null) {
-            Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6&l<" + this.getClanInControl().getTagLabel(true) + "&6&l>&b "
-                    + getTag() + " &7is under attack from &e&6&l<" + clan.getTagLabel(true) + "&6&l>&7!"));
         } else {
             Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&b " + getTag()
-                    + " &7is under attack from &e&6&l<" + clan.getTagLabel(true) + "&6&l>&7!"));
+                    + " &7has been captured by &e&6&l<" + clan.getColorTag() + "&6&l>&7!"));
         }
     }
 
@@ -170,6 +167,8 @@ public class CapturableArea {
 
     public void setHealth(int health) {
         this.health = health;
+        wplugin.getFortressConfig().getConfig().set(type + "." + id + ".health", health);
+
     }
 
     public void setName(String name) {
@@ -204,7 +203,9 @@ public class CapturableArea {
     }
 
     public void setClanInControl(Clan clanInControl) {
-        if (clanInControl != null) this.clanInControl = clanInControl;
+        if (clanInControl != null) {
+            this.clanInControl = clanInControl;
+        }
         this.clanInControl = clanInControl;
         if (clanInControl != null) {
             wplugin.getFortressConfig().getConfig().set(type + "." + id + ".clan", clanInControl.getTag());
@@ -232,7 +233,7 @@ public class CapturableArea {
             wplugin.getFortressConfig().getConfig().set(type + "." + id + ".q1.z", q1.getBlockZ());
         }
     }
-    
+
     public void saveTempData() {
         wplugin.getFortressConfig().getConfig().set(type + "." + id + ".health", health);
     }

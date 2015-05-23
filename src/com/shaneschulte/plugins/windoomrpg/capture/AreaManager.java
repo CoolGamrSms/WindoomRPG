@@ -77,6 +77,7 @@ public class AreaManager extends BukkitRunnable {
                             region.getOwners().addPlayer(p.getName());
                         }
                     }
+                   
                     try {
                         WindoomRPG.getWorldGuard().getRegionManager(fort.capPoint.getWorld()).save();
                     } catch (StorageException ex) {

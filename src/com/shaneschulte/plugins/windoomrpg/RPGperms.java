@@ -31,6 +31,7 @@ public enum RPGperms {
     FORTRESS_LIST(WindoomRPG.p + "fort.list", ""),
     FORTRESS_SETCAPPOINT(WindoomRPG.p + "fort.setpoint", ""),
     FORTRESS_SETRADIUS(WindoomRPG.p + "fort.setradius", ""),
+    FORTRESS_SETHEALTH(WindoomRPG.p + "fort.sethealth", ""),
     CAPTURE_ADMIN(WindoomRPG.p + "fort.admin", "");
     //add command perms here later :)
     

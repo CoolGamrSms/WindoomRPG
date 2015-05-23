@@ -1,0 +1,10 @@
+#config
+
+#//  fortress  //#
+
+#  if the boss bar in fortresses is displayed on full health
+f-hideonfullhealth: true
+
+#  %autoheal amount for areas not under attack
+#  can be negitive. use 0% for no auto healing
+f-autohealamt: 0.5

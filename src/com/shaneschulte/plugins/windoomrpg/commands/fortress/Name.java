@@ -7,6 +7,7 @@ package com.shaneschulte.plugins.windoomrpg.commands.fortress;
 
 import com.rit.sucy.commands.ConfigurableCommand;
 import com.rit.sucy.commands.IFunction;
+import com.shaneschulte.plugins.windoomrpg.ConfigManager;
 import com.shaneschulte.plugins.windoomrpg.WDmsg;
 import com.shaneschulte.plugins.windoomrpg.WindoomRPG;
 import com.shaneschulte.plugins.windoomrpg.capture.AreaManager;
@@ -31,7 +32,7 @@ public class Name implements IFunction {
             AreaManager.getFortressByName(args[0]).setName(args[1]);
             WDmsg.nice(sender, args[0] + WDmsg.nice + "'s name was changed to &e" + args[1]);
             
-            WindoomRPG.fortress.saveConfig();
+            ConfigManager.getFortress().saveConfig();
             AreaManager.loadFortressesFromConfig();
         } else {
             command.displayHelp(sender, 1);
