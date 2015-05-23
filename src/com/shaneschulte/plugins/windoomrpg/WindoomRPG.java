@@ -8,26 +8,32 @@ import com.rit.sucy.commands.CommandManager;
 import com.rit.sucy.commands.ConfigurableCommand;
 import com.rit.sucy.commands.SenderType;
 import com.rit.sucy.config.Config;
-import com.shaneschulte.plugins.commands.Fortress.CreateFortress;
-import com.shaneschulte.plugins.commands.Fortress.List;
-import com.shaneschulte.plugins.commands.Fortress.ModTag;
-import com.shaneschulte.plugins.commands.Fortress.Name;
-import com.shaneschulte.plugins.commands.Fortress.Point;
-import com.shaneschulte.plugins.commands.Fortress.Radius;
-import com.shaneschulte.plugins.commands.Fortress.Remove;
-import com.shaneschulte.plugins.commands.Fortress.SetClan;
-import com.shaneschulte.plugins.commands.RecruiterCommand;
+import com.shaneschulte.plugins.windoomrpg.commands.fortress.CreateFortress;
+import com.shaneschulte.plugins.windoomrpg.commands.fortress.List;
+import com.shaneschulte.plugins.windoomrpg.commands.fortress.ModTag;
+import com.shaneschulte.plugins.windoomrpg.commands.fortress.Name;
+import com.shaneschulte.plugins.windoomrpg.commands.fortress.Point;
+import com.shaneschulte.plugins.windoomrpg.commands.fortress.Radius;
+import com.shaneschulte.plugins.windoomrpg.commands.fortress.Remove;
+import com.shaneschulte.plugins.windoomrpg.commands.fortress.SetClan;
+import com.shaneschulte.plugins.windoomrpg.commands.RecruiterCommand;
 import com.shaneschulte.plugins.windoomrpg.capture.AreaManager;
 import com.shaneschulte.plugins.windoomrpg.capture.CapturableArea;
 import com.shaneschulte.plugins.windoomrpg.capture.Fortress;
+import com.shaneschulte.plugins.windoomrpg.commands.SoundCommand;
+import com.shaneschulte.plugins.windoomrpg.enchanting.TableManager;
+import com.shaneschulte.plugins.windoomrpg.protection.ProtectionListener;
 import com.shaneschulte.plugins.windoomrpg.skills.ArmorPassives;
 import com.shaneschulte.plugins.windoomrpg.skills.BlacksmithingPassives;
 import com.shaneschulte.plugins.windoomrpg.skills.MagePassives;
 import com.shaneschulte.plugins.windoomrpg.skills.RoguePassives;
-import com.shaneschulte.plugins.windoomrpg.skills.WarriorPassives;
+import com.shaneschulte.plugins.windoomrpg.skills.warrior.SpinAttack;
+import com.shaneschulte.plugins.windoomrpg.skills.warrior.WarriorPassives;
 import com.shaneschulte.plugins.windoomrpg.traits.RecruiterTrait;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.SkillPlugin;
 import de.slikey.effectlib.EffectLib;
 import de.slikey.effectlib.EffectManager;
 import java.util.ArrayList;
@@ -48,7 +54,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  *
  * @author Shane
  */
-public class WindoomRPG extends JavaPlugin {
+public class WindoomRPG extends JavaPlugin implements SkillPlugin {
 
     //permissions prefix
     public static String p = "wrpg.";
@@ -56,7 +62,7 @@ public class WindoomRPG extends JavaPlugin {
     public static Config lang, fortress;
     private AreaManager am;
 
-    public static EffectManager effectManager;
+    public EffectManager effectManager;
     public static boolean effects = false;
 
     private WindoomRPG plugin;
@@ -76,8 +82,9 @@ public class WindoomRPG extends JavaPlugin {
         pm.registerEvents(new MagePassives(), this);
         pm.registerEvents(new RoguePassives(), this);
         pm.registerEvents(new BlacksmithingPassives(), this);
+        //pm.registerEvents(new ProtectionListener(), this);
 
-        pm.registerEvents(new CapturableArea(this), this);
+        //pm.registerEvents(new CapturableArea(this), this);
 
         hookPlugins();
 
@@ -102,6 +109,17 @@ public class WindoomRPG extends JavaPlugin {
         );
         myRoot.addSubCommand(myCommand);
         CommandManager.registerCommand(myRoot);
+        
+        ConfigurableCommand soundCommand = new ConfigurableCommand(
+                this,
+                "sound",
+                SenderType.PLAYER_ONLY,
+                new SoundCommand(),
+                "Plays a sound with a given pitch", // A description for the command usage
+                "<sound> <pitch>", // Arguments for the command usage
+                "citizens.admin" // The required permission for the command
+        );
+        CommandManager.registerCommand(soundCommand);
 
         //Register commands
         ConfigurableCommand fortressCommand = new ConfigurableCommand(this, "fortress", SenderType.PLAYER_ONLY);
@@ -182,14 +200,10 @@ public class WindoomRPG extends JavaPlugin {
         CommandManager.registerCommand(fortressCommand);
 
         am = new AreaManager();
-
-        //i dont shitting know why this is required but it dosent work without it
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                AreaManager.loadFortressesFromConfig();
-            }
-        }.runTaskLater(this.plugin, 20);
+        AreaManager.loadFortressesFromConfig();
+        
+        TableManager tableManager = new TableManager(this);
+        TableManager.loadTables();
 
         this.getLogger().log(Level.INFO, "{0} version {1} by {2} is enabled!",
                 new Object[]{pdfFile.getName(), pdfFile.getVersion(), pdfFile.getAuthors().get(0)});
@@ -236,6 +250,7 @@ public class WindoomRPG extends JavaPlugin {
         
         fortress.saveConfig();
         
+        TableManager.saveTables();
         effectManager.dispose();
         HandlerList.unregisterAll((Listener) this);
     }
@@ -292,5 +307,15 @@ public class WindoomRPG extends JavaPlugin {
         }
 
         return (WorldEditPlugin) plugin;
+    }
+
+    @Override
+    public void registerSkills(SkillAPI sapi) {
+        sapi.addSkill(new SpinAttack(this));
+    }
+
+    @Override
+    public void registerClasses(SkillAPI sapi) {
+        sapi.addClass(new TestClass());
     }
 }

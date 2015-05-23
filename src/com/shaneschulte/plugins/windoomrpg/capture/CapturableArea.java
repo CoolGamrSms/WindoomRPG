@@ -22,26 +22,24 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  *
  * @author Hikeru
  */
-public class CapturableArea implements Listener {
+public class CapturableArea {
 
     //Attack states
     private static final int UNDERATTACK = -1, NEUTRAL = 0, UNDERCONTROL = 1;
     protected int currentMode = NEUTRAL;
     protected int health = 300; //ender dragon health on spigot servers
 
-    private final JavaPlugin plugin;
     WindoomRPG wplugin = null;
 
     protected String type = "CapturableArea";
-    protected ArrayList<Player> playersInArea = new ArrayList<Player>();
-    protected ArrayList<Player> playersInCaptureArea = new ArrayList<Player>();
+    protected ArrayList<Player> playersInArea;
+    protected ArrayList<Player> playersInCaptureArea;
 
     //default vars
     protected String name = "Undiscovered Fortress", tag = "&7Undiscovered Fortress", id = "Unknown";
@@ -52,38 +50,31 @@ public class CapturableArea implements Listener {
     protected Clan clanInControl = null;
 
     public CapturableArea(JavaPlugin plugin) {
-        this.plugin = plugin;
-        this.wplugin = (WindoomRPG) Bukkit.getServer().getPluginManager().getPlugin("WindoomRPG");
+        this.wplugin = (WindoomRPG)plugin;
+        playersInArea = new ArrayList<>();
+        playersInCaptureArea = new ArrayList<>();
     }
 
     public ArrayList<Player> getPlayersInArea() {
-        //reset old list
-        playersInArea = new ArrayList<>();
-        String regionNameCc = type + "_" + id;
-
-        for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-            if (isWithinRegion(p, regionNameCc)) {
-                playersInArea.add(p);
-            }
-        }
         return playersInArea;
-
     }
 
     public void update() {
-        
+        playersInArea.clear();
+        playersInCaptureArea.clear();
+        String regionNameCc = type + "_" + id;
+
+        for (Player p : Bukkit.getServer().getWorld("world").getPlayers()) {
+            if (isWithinRegion(p, regionNameCc)) {
+                playersInArea.add(p);
+                if (capPoint.distance(p.getLocation()) <= getCapRadius()) {
+                    playersInCaptureArea.add(p);
+                }
+            }
+        }    
     }
 
     public ArrayList<Player> getPlayersInCaptureRadius() {
-        //remove old list
-        playersInCaptureArea = new ArrayList<>();
-
-        //get player's who's position is less than the radius
-        for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-            if (capPoint.distance(p.getLocation()) <= getCapRadius()) {
-                playersInCaptureArea.add(p);
-            }
-        }
         return playersInCaptureArea;
     }
 
@@ -120,21 +111,21 @@ public class CapturableArea implements Listener {
 
     public void onClaim(Clan clan) {
         if (this.getClanInControl() != null) {
-            Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6&l<" + this.getClanInControl().getTagLabel() + "&6&l> &b"
-                    + getTag() + " &7has been captured by &e" + clan.getTagLabel() + "&7!"));
+            Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6&l<" + this.getClanInControl().getTagLabel(true) + "&6&l> &b"
+                    + getTag() + " &7has been captured by &e" + clan.getTagLabel(true) + "&7!"));
         } else {
             Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&b" + getTag()
-                    + " &7has been captured by &e&6&l<" + clan.getTagLabel() + "&6&l>&7!"));
+                    + " &7has been captured by &e&6&l<" + clan.getTagLabel(true) + "&6&l>&7!"));
         }
     }
 
     public void onAttack(Clan clan) {
         if (this.getClanInControl() != null) {
-            Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6&l<" + this.getClanInControl().getTagLabel() + "&6&l>&b "
-                    + getTag() + " &7is under attack from &e&6&l<" + clan.getTagLabel() + "&6&l>&7!"));
+            Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6&l<" + this.getClanInControl().getTagLabel(true) + "&6&l>&b "
+                    + getTag() + " &7is under attack from &e&6&l<" + clan.getTagLabel(true) + "&6&l>&7!"));
         } else {
             Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&b " + getTag()
-                    + " &7is under attack from &e&6&l<" + clan.getTagLabel() + "&6&l>&7!"));
+                    + " &7is under attack from &e&6&l<" + clan.getTagLabel(true) + "&6&l>&7!"));
         }
     }
 

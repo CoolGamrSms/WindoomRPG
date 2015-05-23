@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.shaneschulte.plugins.commands.Fortress;
+package com.shaneschulte.plugins.windoomrpg.commands.fortress;
 
 import com.rit.sucy.commands.ConfigurableCommand;
 import com.rit.sucy.commands.IFunction;
@@ -19,28 +19,27 @@ import org.bukkit.plugin.Plugin;
  *
  * @author Hikeru
  */
-public class Radius implements IFunction {
+public class Point implements IFunction {
 
     @Override
     public void execute(ConfigurableCommand command, Plugin plugin, CommandSender sender, String[] args) {
-        if (args.length == 2) {
+        if (args.length == 1) {
             if (AreaManager.getFortressByName(args[0]) == null) {
                 WDmsg.bad(sender, "&b" + args[0] + WDmsg.bad + " is not a real fortress.");
                 return;
             }
 
-            try {
-                int num = Integer.parseInt(args[1]);
-            } catch (NumberFormatException nfe) {
-                WDmsg.bad(sender, "&b" + args[1] + WDmsg.bad + " is not a real number.");
-                return;
-            }
+            Player p = (Player) sender;
+            Location loc = p.getLocation();
 
-            //set radius
-            AreaManager.getFortressByName(args[0]).setCapRadius(Integer.parseInt(args[1]));
-            WDmsg.nice(sender, args[0] + WDmsg.nice + "'s cap radius is now &e" + args[1]);
+            //set cap point to player location
+            AreaManager.getFortressByName(args[0]).setCapPoint(p.getLocation());
+            WDmsg.nice(p, "Set &ecapture point " + WDmsg.info + "to (&b"
+                    + loc.getBlockX() + WDmsg.info
+                    + ",&b " + loc.getBlockY() + WDmsg.info
+                    + ",&b " + loc.getBlockZ() + WDmsg.info
+                    + ")");
 
-            
             //save config
             WindoomRPG.fortress.saveConfig();
             AreaManager.loadFortressesFromConfig();

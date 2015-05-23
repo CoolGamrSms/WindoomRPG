@@ -5,10 +5,10 @@
  */
 package com.shaneschulte.plugins.windoomrpg.skills;
 
-import com.shaneschulte.plugins.windoomrpg.EnchantingTable;
+import com.shaneschulte.plugins.windoomrpg.enchanting.EnchantingTable;
 import com.shaneschulte.plugins.windoomrpg.RPGperms;
 import com.shaneschulte.plugins.windoomrpg.WDmsg;
-import com.shaneschulte.plugins.windoomrpg.managers.TableManager;
+import com.shaneschulte.plugins.windoomrpg.enchanting.TableManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

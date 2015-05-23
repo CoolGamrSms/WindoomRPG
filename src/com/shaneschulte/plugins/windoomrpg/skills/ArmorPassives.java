@@ -7,8 +7,12 @@ package com.shaneschulte.plugins.windoomrpg.skills;
 import com.shaneschulte.plugins.windoomrpg.PlayerChecks;
 import com.shaneschulte.plugins.windoomrpg.RPGperms;
 import com.shaneschulte.plugins.windoomrpg.WDmsg;
+import com.sk89q.worldguard.bukkit.event.DelegateEvent;
+import com.sk89q.worldguard.bukkit.event.Handleable;
+import com.sk89q.worldguard.bukkit.event.block.BreakBlockEvent;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
@@ -28,7 +32,7 @@ public class ArmorPassives extends BukkitRunnable implements Listener {
         this.plugin = plugin;
         this.runTaskTimer(plugin, 20, 40);
     }
-    
+
     @EventHandler
     public void onAboutToCraftSomething(PrepareItemCraftEvent ev) {
         Player name = (Player) ev.getView().getPlayer();
@@ -48,7 +52,7 @@ public class ArmorPassives extends BukkitRunnable implements Listener {
     //run from main class like every 2 seconds
     @Override
     public void run() {
-       /* for (Player p : plugin.getServer().getOnlinePlayers()) {
+       for (Player p : plugin.getServer().getOnlinePlayers()) {
             boolean msg = false;
             if (!p.hasPermission(RPGperms.USE_IRON_ARMOR.getPermission()) && PlayerChecks.removeArmorType(p, "iron")) {
                 WDmsg.bad(p, RPGperms.USE_IRON_ARMOR.getWarning());
@@ -57,7 +61,6 @@ public class ArmorPassives extends BukkitRunnable implements Listener {
             if (!p.hasPermission(RPGperms.USE_DIAMOND_ARMOR.getPermission()) && PlayerChecks.removeArmorType(p, "diamond")) {
                 if(!msg) WDmsg.bad(p, RPGperms.USE_DIAMOND_ARMOR.getWarning());
             }
-        }*/
-
+        }
     }
 }

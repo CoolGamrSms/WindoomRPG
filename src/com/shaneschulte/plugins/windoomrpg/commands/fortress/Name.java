@@ -3,50 +3,38 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.shaneschulte.plugins.commands.Fortress;
+package com.shaneschulte.plugins.windoomrpg.commands.fortress;
 
 import com.rit.sucy.commands.ConfigurableCommand;
 import com.rit.sucy.commands.IFunction;
 import com.shaneschulte.plugins.windoomrpg.WDmsg;
 import com.shaneschulte.plugins.windoomrpg.WindoomRPG;
 import com.shaneschulte.plugins.windoomrpg.capture.AreaManager;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 /**
  *
  * @author Hikeru
  */
-public class Point implements IFunction {
+public class Name implements IFunction {
 
     @Override
     public void execute(ConfigurableCommand command, Plugin plugin, CommandSender sender, String[] args) {
-        if (args.length == 1) {
+        if (args.length == 2) {
             if (AreaManager.getFortressByName(args[0]) == null) {
-                WDmsg.bad(sender, "&b" + args[0] + WDmsg.bad + " is not a real fortress.");
+                WDmsg.bad(sender, "&e" + args[0] + WDmsg.bad + " is not a real fortress.");
                 return;
             }
 
-            Player p = (Player) sender;
-            Location loc = p.getLocation();
-
-            //set cap point to player location
-            AreaManager.getFortressByName(args[0]).setCapPoint(p.getLocation());
-            WDmsg.nice(p, "Set &ecapture point " + WDmsg.info + "to (&b"
-                    + loc.getBlockX() + WDmsg.info
-                    + ",&b " + loc.getBlockY() + WDmsg.info
-                    + ",&b " + loc.getBlockZ() + WDmsg.info
-                    + ")");
-
-            //save config
+            //simple enough
+            AreaManager.getFortressByName(args[0]).setName(args[1]);
+            WDmsg.nice(sender, args[0] + WDmsg.nice + "'s name was changed to &e" + args[1]);
+            
             WindoomRPG.fortress.saveConfig();
             AreaManager.loadFortressesFromConfig();
-
         } else {
             command.displayHelp(sender, 1);
         }
     }
-
 }

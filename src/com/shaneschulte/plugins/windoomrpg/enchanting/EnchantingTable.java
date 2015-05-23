@@ -2,10 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.shaneschulte.plugins.windoomrpg;
+package com.shaneschulte.plugins.windoomrpg.enchanting;
 
-import com.shaneschulte.plugins.windoomrpg.managers.TableManager;
-import com.shaneschulte.plugins.windoomrpg.managers.TableManager.EnchantWeight;
+import com.shaneschulte.plugins.windoomrpg.enchanting.TableManager;
+import com.shaneschulte.plugins.windoomrpg.enchanting.TableManager.EnchantWeight;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Location;

@@ -50,6 +50,7 @@ public class Fortress extends CapturableArea {
      */
     @Override
     public void update() {
+        super.update();
         for (Player p : getPlayersInArea()) {
             BossBarApi.sendFortressInfo(p, this, health);
             BossBarApi.removeBar(p, 20 * 2);

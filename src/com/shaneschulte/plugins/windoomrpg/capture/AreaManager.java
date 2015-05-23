@@ -7,7 +7,7 @@ package com.shaneschulte.plugins.windoomrpg.capture;
 
 import com.shaneschulte.plugins.windoomrpg.WindoomRPG;
 import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldguard.protection.databases.ProtectionDatabaseException;
+import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -79,7 +79,7 @@ public class AreaManager extends BukkitRunnable {
                     }
                     try {
                         WindoomRPG.getWorldGuard().getRegionManager(fort.capPoint.getWorld()).save();
-                    } catch (ProtectionDatabaseException ex) {
+                    } catch (StorageException ex) {
                         Logger.getLogger(AreaManager.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     WindoomRPG.getWorldGuard().getRegionManager(fort.capPoint.getWorld()).addRegion(region);
