@@ -12,6 +12,7 @@ import com.shaneschulte.plugins.windoomrpg.WindoomRPG;
 import com.shaneschulte.plugins.windoomrpg.capture.Fortress;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.bukkit.selections.Selection;
+import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

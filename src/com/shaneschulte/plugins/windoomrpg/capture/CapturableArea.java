@@ -11,12 +11,20 @@ import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.bukkit.BukkitUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
+import com.sk89q.worldguard.protection.flags.RegionGroup;
+import com.sk89q.worldguard.protection.flags.RegionGroupFlag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.StringFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.sacredlabyrinth.phaed.simpleclans.Clan;
-import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -212,11 +220,44 @@ public class CapturableArea {
         }
 
         //add owners to WorldGuard region
-        if (getClanInControl() != null && WindoomRPG.getWorldGuard().getRegionManager(capPoint.getWorld()).getRegion("fortress" + "_" + getId()) != null) {
-            ProtectedRegion region = WindoomRPG.getWorldGuard().getRegionManager(capPoint.getWorld()).getRegion("fortress" + "_" + getId());
-            region.getOwners().removeAll();
-            for (ClanPlayer p : wplugin.getClanManager().getAllClanPlayers()) {
-                region.getOwners().addPlayer(p.getName());
+        if (WindoomRPG.getWorldGuard().getRegionManager(capPoint.getWorld()).getRegion("fortress" + "_" + getId()) != null) {
+            if (getClanInControl() != null) {
+                ProtectedRegion region = WindoomRPG.getWorldGuard().getRegionManager(capPoint.getWorld()).getRegion("fortress" + "_" + getId());
+
+                //Set flag group to clan name
+                DefaultDomain dm = new DefaultDomain();
+                dm.addGroup(getClanInControl().getTag());
+                region.setMembers(dm);
+
+                //Set chest acceess to deny for anyone not in the clan
+                region.setFlag(DefaultFlag.CHEST_ACCESS, StateFlag.State.DENY);
+                RegionGroupFlag groupFlag = DefaultFlag.CHEST_ACCESS.getRegionGroupFlag();
+                RegionGroup groupValue = null;
+                try {
+                    groupValue = groupFlag.parseInput(WindoomRPG.getWorldGuard(), null, "non_members");
+                } catch (InvalidFlagFormat ex) {
+                    Logger.getLogger(AreaManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                //Set enter and exit messages for clan regions
+                StringFlag eflag = com.sk89q.worldguard.protection.flags.DefaultFlag.GREET_MESSAGE;
+                StringFlag lflag = com.sk89q.worldguard.protection.flags.DefaultFlag.FAREWELL_MESSAGE;
+                try {
+                    region.setFlag(eflag, eflag.parseInput(WindoomRPG.getWorldGuard(), null, ChatColor.translateAlternateColorCodes('&',
+                            "&7Now entering &6&l<&b" + getClanInControl().getColorTag() + "&6&l>&7's &e" + getTag())));
+                    region.setFlag(lflag, lflag.parseInput(WindoomRPG.getWorldGuard(), null, ChatColor.translateAlternateColorCodes('&',
+                            "&7Now leaving &6&l<&b" + getClanInControl().getColorTag() + "&6&l>&7's &e" + getTag())));
+                } catch (InvalidFlagFormat ex) {
+                    Logger.getLogger(CapturableArea.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                //Another catch
+                if (groupValue != null) {
+                    region.setFlag(groupFlag, groupValue);
+                    //Bukkit.getServer().getLogger().info("'\non-members\' deny messed up :/");
+                }
+                
+                //  :)  ~hikeru  --
             }
         }
     }

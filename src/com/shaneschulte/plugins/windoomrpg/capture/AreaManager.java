@@ -7,17 +7,21 @@ package com.shaneschulte.plugins.windoomrpg.capture;
 
 import com.shaneschulte.plugins.windoomrpg.WindoomRPG;
 import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldguard.domains.DefaultDomain;
+import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
+import com.sk89q.worldguard.protection.flags.StringFlag;
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -61,30 +65,47 @@ public class AreaManager extends BukkitRunnable {
                     fort.id = key;
                     fort.health = cc.getInt("health");
 
+                    if (WindoomRPG.getWorldGuard().getRegionManager(fort.getCapPoint().getWorld()).getRegion("fortress" + "_" + fort.getId()) == null) {
+
+                        //get region
+                        ProtectedCuboidRegion region = new ProtectedCuboidRegion("fortress" + "_" + key,
+                                fort.getQ1(),
+                                fort.getQ2());
+
+                        //add members to region
+                        if (cc.getString("clan") != null) {
+                            DefaultDomain dm = new DefaultDomain();
+                            dm.addGroup(plugin.getClanManager().getClan(cc.getString("clan")).getTag());
+                            region.setMembers(dm);
+                        }
+
+                        try {
+                            WindoomRPG.getWorldGuard().getRegionManager(fort.capPoint.getWorld()).save();
+                        } catch (StorageException ex) {
+                            Logger.getLogger(AreaManager.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        WindoomRPG.getWorldGuard().getRegionManager(fort.capPoint.getWorld()).addRegion(region);
+                    } else {
+                        ProtectedRegion region = WindoomRPG.getWorldGuard().getRegionManager(fort.getCapPoint().getWorld()).getRegion("fortress" + "_" + fort.getId());
+
+                        //Set enter and exit messages for neutral regions
+                        StringFlag eflag = com.sk89q.worldguard.protection.flags.DefaultFlag.GREET_MESSAGE;
+                        StringFlag lflag = com.sk89q.worldguard.protection.flags.DefaultFlag.FAREWELL_MESSAGE;
+                        try {
+                            region.setFlag(eflag, eflag.parseInput(WindoomRPG.getWorldGuard(), null, ChatColor.translateAlternateColorCodes('&',
+                                    "&7Now entering&b" + "&b neutral" + " &e" + fort.getTag())));
+                            region.setFlag(lflag, lflag.parseInput(WindoomRPG.getWorldGuard(), null, ChatColor.translateAlternateColorCodes('&',
+                                    "&7Now leaving&b" + "&b neutral" + " &e" + fort.getTag())));
+                        } catch (InvalidFlagFormat ex) {
+                            Logger.getLogger(CapturableArea.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+
                     //get clan
                     if (cc.getString("clan") != null) {
                         fort.setClanInControl(plugin.getClanManager().getClan(cc.getString("clan")));
                     }
 
-                    //get region
-                    ProtectedCuboidRegion region = new ProtectedCuboidRegion("fortress" + "_" + key,
-                            fort.getQ1(),
-                            fort.getQ2());
-
-                    //add owners to region
-                    if (fort.getClanInControl() != null) {
-                        for (ClanPlayer p : plugin.getClanManager().getAllClanPlayers()) {
-                            region.getOwners().addPlayer(p.getName());
-                        }
-                    }
-                   
-                    try {
-                        WindoomRPG.getWorldGuard().getRegionManager(fort.capPoint.getWorld()).save();
-                    } catch (StorageException ex) {
-                        Logger.getLogger(AreaManager.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    WindoomRPG.getWorldGuard().getRegionManager(fort.capPoint.getWorld()).addRegion(region);
-                    
                     //add fortress to array
                     AreaManager.addFortress(fort);
 
@@ -144,10 +165,18 @@ public class AreaManager extends BukkitRunnable {
         return null;
     }
 
+    public static Fortress getFortressByPlayer(Player name) {
+        for (Fortress fort : fortresses) {
+            if (fort.getPlayersInArea().contains(name)) return fort;
+        }
+        
+        return null;
+    }
+
     public static void saveFortressesToConfig() {
         for (Fortress fort : fortresses) {
             String cc = fort.type + "." + fort.id;
-            
+
             //save vars
             plugin.getFortressConfig().getConfig().set(cc + ".name", fort.getName());
             plugin.getFortressConfig().getConfig().set(cc + ".tag", fort.tag);

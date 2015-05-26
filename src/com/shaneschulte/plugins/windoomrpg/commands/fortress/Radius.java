@@ -9,11 +9,8 @@ import com.rit.sucy.commands.ConfigurableCommand;
 import com.rit.sucy.commands.IFunction;
 import com.shaneschulte.plugins.windoomrpg.ConfigManager;
 import com.shaneschulte.plugins.windoomrpg.WDmsg;
-import com.shaneschulte.plugins.windoomrpg.WindoomRPG;
 import com.shaneschulte.plugins.windoomrpg.capture.AreaManager;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 /**

@@ -7,19 +7,20 @@ package com.shaneschulte.plugins.windoomrpg.commands.fortress;
 
 import com.rit.sucy.commands.ConfigurableCommand;
 import com.rit.sucy.commands.IFunction;
-import com.shaneschulte.plugins.windoomrpg.ConfigManager;
 import com.shaneschulte.plugins.windoomrpg.WDmsg;
 import com.shaneschulte.plugins.windoomrpg.capture.AreaManager;
+import com.shaneschulte.plugins.windoomrpg.capture.Fortress;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.plugin.Plugin;
 
 /**
  *
  * @author Hikeru
  */
-public class Point implements IFunction {
+public class Teleport implements IFunction {
 
     @Override
     public void execute(ConfigurableCommand command, Plugin plugin, CommandSender sender, String[] args) {
@@ -30,19 +31,17 @@ public class Point implements IFunction {
             }
 
             Player p = (Player) sender;
-            Location loc = p.getLocation();
+            Fortress fort = AreaManager.getFortressByName(args[0]);
 
-            //set cap point to player location
-            AreaManager.getFortressByName(args[0]).setCapPoint(p.getLocation());
-            WDmsg.nice(p, "Set &ecapture point " + WDmsg.info + "to (&b"
-                    + loc.getBlockX() + WDmsg.info
-                    + ",&b " + loc.getBlockY() + WDmsg.info
-                    + ",&b " + loc.getBlockZ() + WDmsg.info
-                    + ")");
+            //get smooth cap point :D
+            Location to = fort.getCapPoint();
+            to.setPitch(p.getLocation().getPitch());
+            to.setYaw(p.getLocation().getYaw());
+            
+            p.teleport(to.add(0, 2, 0), PlayerTeleportEvent.TeleportCause.PLUGIN);
 
-            //save config
-            ConfigManager.getFortress().saveConfig();
-            AreaManager.loadFortressesFromConfig();
+            WDmsg.nice(p, "Teleported to &b" + fort.getTag() + WDmsg.nice + "'s &ecapture point&b  ");
+            
 
         } else {
             command.displayHelp(sender, 1);

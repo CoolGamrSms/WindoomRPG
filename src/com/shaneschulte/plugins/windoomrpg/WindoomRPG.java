@@ -20,7 +20,9 @@ import com.shaneschulte.plugins.windoomrpg.commands.RecruiterCommand;
 import com.shaneschulte.plugins.windoomrpg.capture.AreaManager;
 import com.shaneschulte.plugins.windoomrpg.capture.Fortress;
 import com.shaneschulte.plugins.windoomrpg.commands.SoundCommand;
+import com.shaneschulte.plugins.windoomrpg.commands.fortress.Info;
 import com.shaneschulte.plugins.windoomrpg.commands.fortress.SetHealth;
+import com.shaneschulte.plugins.windoomrpg.commands.fortress.Teleport;
 import com.shaneschulte.plugins.windoomrpg.enchanting.TableManager;
 import com.shaneschulte.plugins.windoomrpg.protection.ArmorStandManager;
 import com.shaneschulte.plugins.windoomrpg.protection.ProtectionListener;
@@ -190,6 +192,24 @@ public class WindoomRPG extends JavaPlugin implements SkillPlugin {
                         "remove a fortress",
                         "<fortress>",
                         RPGperms.FORTRESS_REMOVE.p()
+                ),
+                new ConfigurableCommand(
+                        this,
+                        "tp",
+                        SenderType.ANYONE,
+                        new Teleport(),
+                        "teport directly to a fort's capture point",
+                        "<fortress>",
+                        RPGperms.FORTRESS_TELEPORT.p()
+                ),
+                new ConfigurableCommand(
+                        this,
+                        "info",
+                        SenderType.ANYONE,
+                        new Info(),
+                        "provides info of a fortress",
+                        "(fort) <-- optional :)",
+                        RPGperms.FORTRESS_INFO.p()
                 ),
                 new ConfigurableCommand(
                         this,
